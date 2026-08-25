@@ -1,0 +1,141 @@
+# Datasets: hundreds of gigabytes, and the API never reads them. Training only.
+# Anchored to the repo root on purpose. Unanchored, "Data/" matches a directory of that
+# name at any depth, and because git is case-insensitive on Windows it was also swallowing
+# matlab/data/ -- the whole data layer of the MATLAB pipeline, never committed and never
+# noticed, because it is only ever read on the machine that wrote it.
+/Data/
+
+# Research paper & experimental benchmarks (withheld)
+iclr/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+.venv/
+venv/
+ENV/
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# Node / Frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+web/dist/
+web/dist-ssr/
+web/.next/
+web/.turbo/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Editor and IDE directories
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.claude/
+
+# Operating System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# TeX / LaTeX auxiliary and build files
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.out
+*.toc
+*.lof
+*.lot
+iclr/*.log
+iclr/*.err
+
+# Local runtime state: recreated on first run, and never the same between machines
+api/certus.db
+api/certus.db-shm
+api/certus.db-wal
+api/storage/
+api/server.log
+api/server.err
+api/server.log.baseline
+api/watchdog.err.log
+
+# Training runs. Everything is excluded, then the few files the demo needs are added
+# back: the EMA checkpoint, the fitted trust layer, the config that built the model, the
+# saved logits (so operating points can be re-explored without a GPU), and the per-epoch
+# validation record. last.pt is 127 MB of optimiser state and is deliberately left out.
+runs_torch/*
+!runs_torch/train_20260912_211356/
+runs_torch/train_20260912_211356/*
+!runs_torch/train_20260912_211356/best.pt
+!runs_torch/train_20260912_211356/trust.json
+!runs_torch/train_20260912_211356/config.json
+!runs_torch/train_20260912_211356/predictions.npz
+!runs_torch/train_20260912_211356/val.csv
+!runs_torch/train_20260912_211356/new_camera.json
+# The second reader (torch/train_baseline.py): its checkpoint is part of the deployed decision.
+!runs_torch/baseline_wholeimage_20260921_154239/
+runs_torch/baseline_wholeimage_20260921_154239/*
+!runs_torch/baseline_wholeimage_20260921_154239/best.pt
+!runs_torch/baseline_wholeimage_20260921_154239/baseline.json
+!runs_torch/baseline_wholeimage_20260921_154239/predictions.npz
+!runs_torch/baseline_wholeimage_20260921_154239/ensemble.json
+!runs_torch/baseline_wholeimage_20260921_154239/second_reader.json
+# The ONNX export is committed so the MATLAB deliverable runs from a clean clone without
+# a Python/torch install to re-export it. The imported .mat is not: MATLAB rebuilds it on
+# first run, it is tied to the MATLAB release that wrote it, and it is another 34 MB.
+!runs_torch/train_20260912_211356/onnx/
+runs_torch/train_20260912_211356/onnx/certus_matlab_model.mat
+
+# Custom layers importNetworkFromONNX generates for the imported graphs. Build output:
+# certus_demo regenerates them on first run, pinned to matlab/ by importCertusOnnx.
+matlab/+certus_enc/
+matlab/+certus_attn/
+matlab/+certus_grade/
+matlab/+certus_qual/
+matlab/+certus_feat/
+matlab/+certus_second/
+
+# Scratch
+*.tmp
+*.prev
+
+# MATLAB/Simulink build products
+slprj/
+*.slxc
+*.asv
+*.autosave
+
+# reader-study photographs (regenerate with study/select_cases.py)
+study/images/
