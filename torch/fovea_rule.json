@@ -1,0 +1,8 @@
+{
+ "ruler": "D",
+ "temporal": 0.3785,
+ "inferior": 0.0511,
+ "refine_radius_dd": 0.5,
+ "fitted_on": "IDRiD localisation train split",
+ "note": "fitted, ruler=D, + darkest point within 0.5 DD"
+}
