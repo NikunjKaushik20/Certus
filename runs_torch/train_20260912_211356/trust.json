@@ -1,0 +1,456 @@
+{
+ "checkpoint": "D:/Certus/runs_torch/train_20260912_211356/best.pt",
+ "step": 16760,
+ "tta": true,
+ "temperature": 1.211283780236765,
+ "alphas": {
+  "0.05": {
+   "q": {
+    "1": 0.7747152894735336,
+    "0": 0.45982611179351807
+   }
+  },
+  "0.1": {
+   "q": {
+    "1": 0.40716469287872314,
+    "0": 0.13957376778125763
+   }
+  }
+ },
+ "per_domain": {
+  "APTOS_mixed_India": {
+   "temperature": 1.1948548304088051,
+   "referral_threshold": 0.10285960882902145,
+   "n_val": 526,
+   "alphas": {
+    "0.05": {
+     "q": {
+      "1": 0.5849346816539764,
+      "0": 0.9111444354057312
+     }
+    },
+    "0.1": {
+     "q": {
+      "1": 0.359430730342865,
+      "0": 0.533459484577179
+     }
+    }
+   }
+  },
+  "DDR_mixed_China": {
+   "temperature": 1.2015585113698906,
+   "referral_threshold": 0.07517670094966888,
+   "n_val": 2466,
+   "alphas": {
+    "0.05": {
+     "q": {
+      "1": 0.8119825124740601,
+      "0": 0.3444116711616516
+     }
+    },
+    "0.1": {
+     "q": {
+      "1": 0.4142969250679016,
+      "0": 0.11656542867422104
+     }
+    }
+   }
+  }
+ },
+ "lesion": {
+  "thresholds": {
+   "MA": 0.406,
+   "HE": 0.648,
+   "EX": 0.828,
+   "SE": 0.121,
+   "VES": 0.5
+  },
+  "val": {
+   "MA": 0.4277,
+   "HE": 0.606,
+   "EX": 0.6066,
+   "SE": 0.5117,
+   "MA_best": 0.433,
+   "MA_thr": 0.406,
+   "MA_ap": 0.2739,
+   "HE_best": 0.6092,
+   "HE_thr": 0.648,
+   "HE_ap": 0.5245,
+   "EX_best": 0.6183,
+   "EX_thr": 0.828,
+   "EX_ap": 0.5378,
+   "SE_best": 0.5344,
+   "SE_thr": 0.121,
+   "SE_ap": 0.3848
+  },
+  "test": {
+   "MA": 0.3538,
+   "HE": 0.4885,
+   "EX": 0.5356,
+   "SE": 0.4875,
+   "MA_best": 0.3685,
+   "MA_thr": 0.965,
+   "MA_ap": 0.2086,
+   "MA_at_fixed": 0.3466,
+   "HE_best": 0.4971,
+   "HE_thr": 0.719,
+   "HE_ap": 0.431,
+   "HE_at_fixed": 0.4952,
+   "EX_best": 0.5367,
+   "EX_thr": 0.391,
+   "EX_ap": 0.4021,
+   "EX_at_fixed": 0.5159,
+   "SE_best": 0.4954,
+   "SE_thr": 0.418,
+   "SE_ap": 0.3365,
+   "SE_at_fixed": 0.492
+  },
+  "VES_note": "0.5, not the HRF-optimal 0.85 (HRF test F1 0.775 vs 0.736): the vessel head was trained on HRF only and is under-confident on other cameras, where 0.85 keeps 0-2% of the field and disables the NV density rule (reports/vessel_threshold.json)"
+ },
+ "test": {
+  "raw": {
+   "n": 4511,
+   "auc_referable": 0.9521812375454485,
+   "qwk": 0.8342143241133688,
+   "accuracy": 0.7745510973176679,
+   "ece_referable": 0.089521088321947,
+   "sens_at_85spec": 0.9152784388386482,
+   "spec_at_85": 0.850207468879668,
+   "thr_at_85": 0.048496000468730927,
+   "sens_at_0.5": 0.7596382674916706,
+   "spec_at_0.5": 0.9535269709543569,
+   "per_dataset": {
+    "APTOS2019": {
+     "n": 523,
+     "auc": 0.9824896085365098,
+     "qwk": 0.9141273859205035
+    },
+    "DDR": {
+     "n": 3873,
+     "auc": 0.9482340250552328,
+     "qwk": 0.821909439568269
+    },
+    "IDRiD": {
+     "n": 115,
+     "auc": 0.9682860998650472,
+     "qwk": 0.831137483656844
+    }
+   }
+  },
+  "calibrated": {
+   "n": 4511,
+   "auc_referable": 0.9521812375454485,
+   "qwk": 0.8342143241133688,
+   "accuracy": 0.7745510973176679,
+   "ece_referable": 0.07949906793364983,
+   "sens_at_85spec": 0.9152784388386482,
+   "spec_at_85": 0.850207468879668,
+   "thr_at_85": 0.07890187203884125,
+   "sens_at_0.5": 0.7596382674916706,
+   "spec_at_0.5": 0.9535269709543569,
+   "per_dataset": {
+    "APTOS2019": {
+     "n": 523,
+     "auc": 0.9824896085365098,
+     "qwk": 0.9141273859205035
+    },
+    "DDR": {
+     "n": 3873,
+     "auc": 0.9482340250552328,
+     "qwk": 0.821909439568269
+    },
+    "IDRiD": {
+     "n": 115,
+     "auc": 0.9682860998650472,
+     "qwk": 0.831137483656844
+    }
+   }
+  },
+  "domain_calibrated": {
+   "n": 4511,
+   "auc_referable": 0.9522073069334699,
+   "qwk": 0.8342143241133688,
+   "accuracy": 0.7745510973176679,
+   "ece_referable": 0.079773702470167,
+   "sens_at_85spec": 0.9152784388386482,
+   "spec_at_85": 0.850207468879668,
+   "thr_at_85": 0.0774684026837349,
+   "sens_at_0.5": 0.7596382674916706,
+   "spec_at_0.5": 0.9535269709543569,
+   "per_dataset": {
+    "APTOS2019": {
+     "n": 523,
+     "auc": 0.9824896085365098,
+     "qwk": 0.9141273859205035
+    },
+    "DDR": {
+     "n": 3873,
+     "auc": 0.9482340250552328,
+     "qwk": 0.821909439568269
+    },
+    "IDRiD": {
+     "n": 115,
+     "auc": 0.9682860998650472,
+     "qwk": 0.831137483656844
+    }
+   }
+  },
+  "domain_calibration_used": {
+   "APTOS_mixed_India": "per-domain",
+   "DDR_mixed_China": "per-domain",
+   "Kowa_VX-10a": "global (unverified camera)"
+  },
+  "domain_conformal_alpha_0.05": {
+   "n": 4511,
+   "abstain_rate": 0.04743959210818005,
+   "auto_sensitivity": 0.8385283597342872,
+   "auto_specificity": 0.9431623931623931,
+   "missed_referable_rate": 0.1504045692527368,
+   "system_sensitivity": 0.8495954307472632
+  },
+  "conformal_alpha_0.05": {
+   "n": 4511,
+   "abstain_rate": 0.04987807581467529,
+   "auto_sensitivity": 0.8299180327868853,
+   "auto_specificity": 0.9490145672664952,
+   "missed_referable_rate": 0.15801999048072346,
+   "system_sensitivity": 0.8419800095192765
+  },
+  "domain_table_alpha_0.05": [
+   {
+    "domain": "APTOS_mixed_India",
+    "n": 523,
+    "referable_prevalence": 0.38049713193116635,
+    "miss_rate_at_threshold": 0.005025125628140704,
+    "miss_rate_grade1v2_boundary": 0.007142857142857143,
+    "abstain_rate": 0.036328871892925434,
+    "ece": 0.03224209083705413
+   },
+   {
+    "domain": "DDR_mixed_China",
+    "n": 3873,
+    "referable_prevalence": 0.47146914536534984,
+    "miss_rate_at_threshold": 0.09693318729463307,
+    "miss_rate_grade1v2_boundary": 0.12030075187969924,
+    "abstain_rate": 0.051897753679318356,
+    "ece": 0.09437379335390399
+   },
+   {
+    "domain": "Kowa_VX-10a",
+    "n": 115,
+    "referable_prevalence": 0.6608695652173913,
+    "miss_rate_at_threshold": 0.0,
+    "miss_rate_grade1v2_boundary": 0.0,
+    "abstain_rate": 0.043478260869565216,
+    "ece": 0.051447645591005044
+   }
+  ],
+  "conformal_alpha_0.1": {
+   "n": 4511,
+   "abstain_rate": 0.1041897583684327,
+   "auto_sensitivity": 0.8569051580698835,
+   "auto_specificity": 0.9624664879356568,
+   "missed_referable_rate": 0.12279866730128511,
+   "system_sensitivity": 0.8772013326987149
+  },
+  "domain_table_alpha_0.1": [
+   {
+    "domain": "APTOS_mixed_India",
+    "n": 523,
+    "referable_prevalence": 0.38049713193116635,
+    "miss_rate_at_threshold": 0.005025125628140704,
+    "miss_rate_grade1v2_boundary": 0.007142857142857143,
+    "abstain_rate": 0.06692160611854685,
+    "ece": 0.03224209083705413
+   },
+   {
+    "domain": "DDR_mixed_China",
+    "n": 3873,
+    "referable_prevalence": 0.47146914536534984,
+    "miss_rate_at_threshold": 0.09693318729463307,
+    "miss_rate_grade1v2_boundary": 0.12030075187969924,
+    "abstain_rate": 0.10844306738962045,
+    "ece": 0.09437379335390399
+   },
+   {
+    "domain": "Kowa_VX-10a",
+    "n": 115,
+    "referable_prevalence": 0.6608695652173913,
+    "miss_rate_at_threshold": 0.0,
+    "miss_rate_grade1v2_boundary": 0.0,
+    "abstain_rate": 0.13043478260869565,
+    "ece": 0.051447645591005044
+   }
+  ]
+ },
+ "external_messidor2": {
+  "raw": {
+   "n": 1740,
+   "auc_referable": 0.9521725745072049,
+   "qwk": 0.7447864841567852,
+   "accuracy": 0.6752873563218391,
+   "ece_referable": 0.0825495989834649,
+   "sens_at_85spec": 0.9010989010989011,
+   "spec_at_85": 0.8498054474708171,
+   "thr_at_85": 0.3823953866958616,
+   "sens_at_0.5": 0.8747252747252747,
+   "spec_at_0.5": 0.8856031128404669,
+   "per_dataset": {
+    "Messidor2": {
+     "n": 1740,
+     "auc": 0.9521725745072049,
+     "qwk": 0.7447864841567852
+    }
+   }
+  },
+  "calibrated": {
+   "n": 1740,
+   "auc_referable": 0.9521725745072049,
+   "qwk": 0.7447864841567852,
+   "accuracy": 0.6752873563218391,
+   "ece_referable": 0.09279100960361417,
+   "sens_at_85spec": 0.9010989010989011,
+   "spec_at_85": 0.8498054474708171,
+   "thr_at_85": 0.4023282945156096,
+   "sens_at_0.5": 0.8747252747252747,
+   "spec_at_0.5": 0.8856031128404669,
+   "per_dataset": {
+    "Messidor2": {
+     "n": 1740,
+     "auc": 0.9521725745072049,
+     "qwk": 0.7447864841567852
+    }
+   }
+  },
+  "domain_calibrated": {
+   "n": 1740,
+   "auc_referable": 0.9521725745072049,
+   "qwk": 0.7447864841567852,
+   "accuracy": 0.6752873563218391,
+   "ece_referable": 0.09279100960361417,
+   "sens_at_85spec": 0.9010989010989011,
+   "spec_at_85": 0.8498054474708171,
+   "thr_at_85": 0.4023282945156096,
+   "sens_at_0.5": 0.8747252747252747,
+   "spec_at_0.5": 0.8856031128404669,
+   "per_dataset": {
+    "Messidor2": {
+     "n": 1740,
+     "auc": 0.9521725745072049,
+     "qwk": 0.7447864841567852
+    }
+   }
+  },
+  "domain_calibration_used": {
+   "Topcon_TRC_NW6": "global (unverified camera)"
+  },
+  "domain_conformal_alpha_0.05": {
+   "n": 1740,
+   "abstain_rate": 0.1293103448275862,
+   "auto_sensitivity": 0.9482352941176471,
+   "auto_specificity": 0.8522935779816514,
+   "missed_referable_rate": 0.04835164835164835,
+   "system_sensitivity": 0.9516483516483516
+  },
+  "conformal_alpha_0.05": {
+   "n": 1740,
+   "abstain_rate": 0.1293103448275862,
+   "auto_sensitivity": 0.9482352941176471,
+   "auto_specificity": 0.8522935779816514,
+   "missed_referable_rate": 0.04835164835164835,
+   "system_sensitivity": 0.9516483516483516
+  },
+  "domain_table_alpha_0.05": [
+   {
+    "domain": "Topcon_TRC_NW6",
+    "n": 1740,
+    "referable_prevalence": 0.2614942528735632,
+    "miss_rate_at_threshold": 0.0989010989010989,
+    "miss_rate_grade1v2_boundary": 0.12753623188405797,
+    "abstain_rate": 0.12931034482758622,
+    "ece": 0.09279100960361417
+   }
+  ],
+  "conformal_alpha_0.1": {
+   "n": 1740,
+   "abstain_rate": 0.25172413793103443,
+   "auto_sensitivity": 0.9645569620253165,
+   "auto_specificity": 0.87651598676957,
+   "missed_referable_rate": 0.03076923076923077,
+   "system_sensitivity": 0.9692307692307692
+  },
+  "domain_table_alpha_0.1": [
+   {
+    "domain": "Topcon_TRC_NW6",
+    "n": 1740,
+    "referable_prevalence": 0.2614942528735632,
+    "miss_rate_at_threshold": 0.0989010989010989,
+    "miss_rate_grade1v2_boundary": 0.12753623188405797,
+    "abstain_rate": 0.2517241379310345,
+    "ece": 0.09279100960361417
+   }
+  ]
+ },
+ "screening_band": {
+  "clear_below": 0.047173877734825655,
+  "refer_above": 0.22528471052646637,
+  "fitted_on": "val (3049 eyes), never test or Messidor-2",
+  "rule": "clear cut = score achieving 99% sensitivity on val; refer cut = conformal alpha=0.05 upper band",
+  "why": "conformal bands guarantee label-set coverage, not screening sensitivity. At alpha=0.05 the clear-side band auto-cleared p<=0.4598, well above the 90%-sensitivity threshold of 0.100, and 15.8% of referable eyes on test were cleared without human review.",
+  "replaces": {
+   "alpha": 0.05,
+   "clear_below_was": 0.45982611179351807
+  },
+  "measured": {
+   "test": {
+    "n": 4511,
+    "abstain_rate": 0.11749057858567946,
+    "system_sensitivity": 0.9438362684435982,
+    "missed_referable": 118,
+    "auto_specificity": 0.9068767908309455
+   },
+   "external_messidor2": {
+    "n": 1740,
+    "abstain_rate": 0.26436781609195403,
+    "system_sensitivity": 0.9956043956043956,
+    "missed_referable": 2,
+    "auto_specificity": 0.5798816568047337
+   }
+  }
+ },
+ "second_reader": {
+  "checkpoint": "runs_torch/baseline_wholeimage_20260921_154239/best.pt",
+  "arch": "efficientnet_b0",
+  "input_size": 512,
+  "score": "raw cumulative logit k=1 (grade >= 2)",
+  "clear_below_logit": -5.1492180824279785,
+  "refer_above_logit": -2.291724443435669,
+  "val_specificities": {
+   "clear": 0.7749853886616014,
+   "refer": 0.9175920514319111
+  },
+  "rule": "auto-decide only when both readers are outside their bands on the same side",
+  "source": "torch/second_reader.py",
+  "measured": {
+   "test": {
+    "system_sensitivity": 0.9762018086625417,
+    "system_specificity": 0.9522821576763485,
+    "to_human": 0.2006207049434715,
+    "missed_referable": 50,
+    "false_auto_refer": 115
+   },
+   "external_messidor2": {
+    "system_sensitivity": 1.0,
+    "system_specificity": 0.8910505836575876,
+    "to_human": 0.4586206896551724,
+    "missed_referable": 0,
+    "false_auto_refer": 140
+   },
+   "external_messidor2_refit_100": {
+    "system_sensitivity": 0.9741,
+    "system_specificity": 0.9652,
+    "to_human": 0.269
+   }
+  }
+ }
+}
