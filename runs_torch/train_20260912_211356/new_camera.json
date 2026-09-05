@@ -1,0 +1,331 @@
+{
+ "temperature": 1.211283780236765,
+ "val_threshold_85spec": 0.07843438535928726,
+ "screening_band": {
+  "clear_below": 0.047173877734825655,
+  "refer_above": 0.22528471052646637
+ },
+ "fixed": {
+  "val": {
+   "val_85spec": {
+    "threshold": 0.0784,
+    "sensitivity": 0.9828,
+    "specificity": 0.8504,
+    "meets_targets": true
+   },
+   "band_clear_cut": {
+    "threshold": 0.0472,
+    "sensitivity": 0.9895,
+    "specificity": 0.7773,
+    "meets_targets": false
+   },
+   "band_refer_cut": {
+    "threshold": 0.2253,
+    "sensitivity": 0.9537,
+    "specificity": 0.9182,
+    "meets_targets": true
+   },
+   "n": 3049,
+   "prevalence": 0.4388
+  },
+  "test": {
+   "val_85spec": {
+    "threshold": 0.0784,
+    "sensitivity": 0.9158,
+    "specificity": 0.8494,
+    "meets_targets": false
+   },
+   "band_clear_cut": {
+    "threshold": 0.0472,
+    "sensitivity": 0.9438,
+    "specificity": 0.788,
+    "meets_targets": false
+   },
+   "band_refer_cut": {
+    "threshold": 0.2253,
+    "sensitivity": 0.842,
+    "specificity": 0.9191,
+    "meets_targets": false
+   },
+   "n": 4511,
+   "prevalence": 0.4658
+  },
+  "external_messidor2": {
+   "val_85spec": {
+    "threshold": 0.0784,
+    "sensitivity": 0.9846,
+    "specificity": 0.5004,
+    "meets_targets": false
+   },
+   "band_clear_cut": {
+    "threshold": 0.0472,
+    "sensitivity": 0.9956,
+    "specificity": 0.3813,
+    "meets_targets": false
+   },
+   "band_refer_cut": {
+    "threshold": 0.2253,
+    "sensitivity": 0.9516,
+    "specificity": 0.7237,
+    "meets_targets": false
+   },
+   "n": 1740,
+   "prevalence": 0.2615
+  },
+  "test_by_dataset": {
+   "APTOS2019": {
+    "sensitivity": 0.995,
+    "specificity": 0.8488,
+    "n": 523,
+    "camera": "APTOS_mixed_India"
+   },
+   "IDRiD": {
+    "sensitivity": 1.0,
+    "specificity": 0.5385,
+    "n": 115,
+    "camera": "Kowa_VX-10a"
+   },
+   "DDR": {
+    "sensitivity": 0.9036,
+    "specificity": 0.8554,
+    "n": 3873,
+    "camera": "DDR_mixed_China"
+   }
+  }
+ },
+ "new_camera_messidor2": {
+  "patients_total": 872,
+  "repeats": 1000,
+  "no_calibration": {
+   "sensitivity": 0.9846,
+   "specificity": 0.5004,
+   "ece": 0.0928,
+   "band_val_fit": {
+    "system_sensitivity": 0.9956,
+    "system_specificity": 0.7237,
+    "abstain_rate": 0.2644
+   }
+  },
+  "band_spec_levels_from_val": {
+   "clear": 0.7773,
+   "refer": 0.9182
+  },
+  "by_patients": {
+   "10": {
+    "eyes_mean": 20.0,
+    "draws": 1000,
+    "sensitivity": {
+     "mean": 0.8823,
+     "lo95": 0.6925,
+     "hi95": 0.9712
+    },
+    "specificity": {
+     "mean": 0.8295,
+     "lo95": 0.5951,
+     "hi95": 0.9788
+    },
+    "threshold": {
+     "mean": 0.4348,
+     "lo95": 0.1255,
+     "hi95": 0.8636
+    },
+    "ece_platt": {
+     "mean": 0.0878,
+     "lo95": 0.0211,
+     "hi95": 0.1898
+    },
+    "meets_both_targets": 0.002,
+    "band_refit": {
+     "system_sensitivity": {
+      "mean": 0.9212,
+      "lo95": 0.7919,
+      "hi95": 0.9844
+     },
+     "system_specificity": {
+      "mean": 0.8859,
+      "lo95": 0.6564,
+      "hi95": 0.9945
+     },
+     "abstain_rate": {
+      "mean": 0.1156,
+      "lo95": 0.0093,
+      "hi95": 0.3192
+     },
+     "meets_both_targets": 0.455
+    }
+   },
+   "25": {
+    "eyes_mean": 49.9,
+    "draws": 1000,
+    "sensitivity": {
+     "mean": 0.8879,
+     "lo95": 0.7775,
+     "hi95": 0.9658
+    },
+    "specificity": {
+     "mean": 0.8454,
+     "lo95": 0.6846,
+     "hi95": 0.9543
+    },
+    "threshold": {
+     "mean": 0.4346,
+     "lo95": 0.1928,
+     "hi95": 0.7359
+    },
+    "ece_platt": {
+     "mean": 0.0524,
+     "lo95": 0.0186,
+     "hi95": 0.1097
+    },
+    "meets_both_targets": 0.011,
+    "band_refit": {
+     "system_sensitivity": {
+      "mean": 0.9278,
+      "lo95": 0.842,
+      "hi95": 0.9709
+     },
+     "system_specificity": {
+      "mean": 0.9093,
+      "lo95": 0.7856,
+      "hi95": 0.9823
+     },
+     "abstain_rate": {
+      "mean": 0.1266,
+      "lo95": 0.0426,
+      "hi95": 0.2563
+     },
+     "meets_both_targets": 0.699
+    }
+   },
+   "50": {
+    "eyes_mean": 99.8,
+    "draws": 1000,
+    "sensitivity": {
+     "mean": 0.8953,
+     "lo95": 0.8262,
+     "hi95": 0.9433
+    },
+    "specificity": {
+     "mean": 0.8458,
+     "lo95": 0.742,
+     "hi95": 0.9274
+    },
+    "threshold": {
+     "mean": 0.4176,
+     "lo95": 0.251,
+     "hi95": 0.6345
+    },
+    "ece_platt": {
+     "mean": 0.039,
+     "lo95": 0.0181,
+     "hi95": 0.0809
+    },
+    "meets_both_targets": 0.01,
+    "band_refit": {
+     "system_sensitivity": {
+      "mean": 0.9308,
+      "lo95": 0.884,
+      "hi95": 0.9694
+     },
+     "system_specificity": {
+      "mean": 0.9123,
+      "lo95": 0.8286,
+      "hi95": 0.9693
+     },
+     "abstain_rate": {
+      "mean": 0.1267,
+      "lo95": 0.064,
+      "hi95": 0.2086
+     },
+     "meets_both_targets": 0.866
+    }
+   },
+   "100": {
+    "eyes_mean": 199.5,
+    "draws": 1000,
+    "sensitivity": {
+     "mean": 0.8968,
+     "lo95": 0.8405,
+     "hi95": 0.9298
+    },
+    "specificity": {
+     "mean": 0.8495,
+     "lo95": 0.7799,
+     "hi95": 0.9139
+    },
+    "threshold": {
+     "mean": 0.4158,
+     "lo95": 0.3042,
+     "hi95": 0.5816
+    },
+    "ece_platt": {
+     "mean": 0.0311,
+     "lo95": 0.017,
+     "hi95": 0.0577
+    },
+    "meets_both_targets": 0.034,
+    "band_refit": {
+     "system_sensitivity": {
+      "mean": 0.9313,
+      "lo95": 0.9034,
+      "hi95": 0.9627
+     },
+     "system_specificity": {
+      "mean": 0.916,
+      "lo95": 0.8556,
+      "hi95": 0.9629
+     },
+     "abstain_rate": {
+      "mean": 0.1291,
+      "lo95": 0.0772,
+      "hi95": 0.1908
+     },
+     "meets_both_targets": 0.962
+    }
+   },
+   "200": {
+    "eyes_mean": 399.1,
+    "draws": 1000,
+    "sensitivity": {
+     "mean": 0.8993,
+     "lo95": 0.8621,
+     "hi95": 0.9266
+    },
+    "specificity": {
+     "mean": 0.8485,
+     "lo95": 0.7919,
+     "hi95": 0.9008
+    },
+    "threshold": {
+     "mean": 0.4084,
+     "lo95": 0.3247,
+     "hi95": 0.5166
+    },
+    "ece_platt": {
+     "mean": 0.0273,
+     "lo95": 0.0172,
+     "hi95": 0.0443
+    },
+    "meets_both_targets": 0.073,
+    "band_refit": {
+     "system_sensitivity": {
+      "mean": 0.9317,
+      "lo95": 0.9114,
+      "hi95": 0.9534
+     },
+     "system_specificity": {
+      "mean": 0.9165,
+      "lo95": 0.8687,
+      "hi95": 0.9516
+     },
+     "abstain_rate": {
+      "mean": 0.1303,
+      "lo95": 0.0954,
+      "hi95": 0.1714
+     },
+     "meets_both_targets": 0.994
+    }
+   }
+  }
+ }
+}
