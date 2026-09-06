@@ -1,0 +1,56 @@
+{
+  "embed_dim": 1280,
+  "input_scale": 1.0,
+  "input_range": "[0,1] RGB, ImageNet normalisation inside graph",
+  "seg_classes": [
+    "MA",
+    "HE",
+    "EX",
+    "SE",
+    "OD",
+    "VES"
+  ],
+  "tile": 512,
+  "grid": 3,
+  "canvas": 1536,
+  "global_size": 512,
+  "evidence_dim": 12,
+  "max_abs_err": {
+    "enc": 3.9577484130859375e-05,
+    "attn": 4.76837158203125e-07,
+    "grade": 1.9073486328125e-06,
+    "qual": 3.5762786865234375e-07,
+    "feat": 1.7762184143066406e-05,
+    "second": 4.601478576660156e-05
+  },
+  "checkpoint": "D:\\Certus\\runs_torch\\train_20260912_211356\\best.pt",
+  "step": 16760,
+  "temperature": 1.211283780236765,
+  "conformal": {
+    "0.05": {
+      "1": 0.7747152894735336,
+      "0": 0.45982611179351807
+    },
+    "0.1": {
+      "1": 0.40716469287872314,
+      "0": 0.13957376778125763
+    }
+  },
+  "lesion_thresholds": {
+    "MA": 0.406,
+    "HE": 0.648,
+    "EX": 0.828,
+    "SE": 0.121,
+    "VES": 0.5
+  },
+  "screening_band": {
+    "clear_below": 0.047173877734825655,
+    "refer_above": 0.22528471052646637
+  },
+  "second_reader": {
+    "input_size": 512,
+    "clear_below_logit": -5.1492180824279785,
+    "refer_above_logit": -2.291724443435669,
+    "rule": "auto-decide only when both readers are outside their bands on the same side"
+  }
+}
