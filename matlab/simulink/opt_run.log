@@ -1,0 +1,76 @@
+
+	Trial License -- for use to evaluate programs for possible purchase as an end-user only.
+
+
+=== Running scenario: base_case ===
+  screened/day=376.1  ophth_util=5.3%  qwait_p95=0.00min  overtime=0min  sent home=0.0  ophth-hrs/100k/yr=338.3
+
+=== Running scenario: unseen_camera ===
+  screened/day=376.1  ophth_util=10.7%  qwait_p95=0.00min  overtime=0min  sent home=0.0  ophth-hrs/100k/yr=681.2
+
+=== Running scenario: unseen_cam_recal ===
+  screened/day=376.1  ophth_util=5.7%  qwait_p95=0.00min  overtime=0min  sent home=0.0  ophth-hrs/100k/yr=365.4
+
+=== Running scenario: power_outage ===
+  screened/day=373.1  ophth_util=5.3%  qwait_p95=0.00min  overtime=30min  sent home=3.1  ophth-hrs/100k/yr=338.3
+
+=== Running scenario: link_3G ===
+  screened/day=376.1  ophth_util=5.3%  qwait_p95=0.00min  overtime=0min  sent home=0.0  ophth-hrs/100k/yr=338.3
+
+=== Running scenario: link_2G ===
+  screened/day=376.1  ophth_util=5.3%  qwait_p95=0.00min  overtime=0min  sent home=0.0  ophth-hrs/100k/yr=338.3
+
+=== Running staffing sweep (base-case abstain rate) ===
+
+
+==================== CERTUS SCREENING CAPACITY SUMMARY ====================
+Scenario            Photo-   Results  Ophth    QWait  Over-     Lost     Lost  SentHome  Reviews   Ophth-hrs
+                   graphed delivered  Util% p95(min)   time  Consent  Quality  unphoto.  done at    /100k/yr
+base_case            392.0     376.1   5.3%     0.00      0      8.0      8.2       0.0    16:00       338.3
+unseen_camera        392.0     376.1  10.7%     0.00      0      8.0      8.2       0.0    16:00       681.2
+unseen_cam_recal     392.0     376.1   5.7%     0.00      0      8.0      8.2       0.0    16:00       365.4
+power_outage         388.9     373.1   5.3%     0.00     30      8.0      8.2       3.1    16:00       338.3
+link_3G              392.0     376.1   5.3%     0.00      0      8.0      8.2       0.0    16:00       338.3
+link_2G              392.0     376.1   5.3%     0.00      0      8.0      8.2       0.0    16:00       338.3
+=============================================================================
+
+--- Staffing sweep (base case, n_doctors = 1..6) ---
+ n_doctors      Util%  QWaitMean   QWaitP95     Screened/d
+         1      15.9%       0.00       0.00          376.1
+         2       7.9%       0.00       0.00          376.1
+         3       5.3%       0.00       0.00          376.1
+         4       4.0%       0.00       0.00          376.1
+         5       3.2%       0.00       0.00          376.1
+         6       2.6%       0.00       0.00          376.1
+
+Figures saved: fig_base_case_timeseries.png, fig_power_outage.png, fig_staffing_sweep.png
+(in D:\Certus\matlab\simulink)
+Searching 1440 set-ups on the stress day...
+  266 s (0.18 s per simulation)
+  1200 of 1440 set-ups meet both targets
+
+Binding constraints on the stress day: cheapest passing set-up per camera count
+  4 cameras: fails (87.4 patients sent home at best)
+  5 cameras: INR 12480/day
+  6 cameras: INR 13980/day
+  7 cameras: INR 15480/day
+  8 cameras: INR 16980/day
+  9 cameras: INR 18480/day
+
+Year check: 250 simulated camp-days, at most 12 may miss a target
+   1. consent 2 cameras 5 devices 1 doctors 1 2G/EDGE  INR 12480/day: misses sent-home  38, review   0 days
+   2. consent 3 cameras 5 devices 1 doctors 1 2G/EDGE  INR 12880/day: misses sent-home  36, review   0 days
+   3. consent 4 cameras 5 devices 1 doctors 1 2G/EDGE  INR 13280/day: misses sent-home  36, review   0 days
+   4. consent 5 cameras 5 devices 1 doctors 1 2G/EDGE  INR 13680/day: misses sent-home  36, review   0 days
+   5. consent 2 cameras 6 devices 1 doctors 1 2G/EDGE  INR 13980/day: misses sent-home  13, review   0 days
+   6. consent 6 cameras 5 devices 1 doctors 1 2G/EDGE  INR 14080/day: misses sent-home  36, review   0 days
+   7. consent 3 cameras 6 devices 1 doctors 1 2G/EDGE  INR 14380/day: misses sent-home   5, review   0 days
+
+Set-up        consent  cameras  devices  doctors uplink            INR/day  INR lakh/yr  sent home/yr  days missed
+optimum             3        6        1        1 2G/EDGE             14380        35.95           135            5
+hand_picked         6        6        4        3 4G                  24100        60.25           135            5
+
+per year: 100115 patients; optimum photographs 97978 (97.87%), hand-picked 97978 (97.87%)
+ophthalmologist-hours spent reviewing per year (optimum): 414
+
+Saved optimise_results.mat and fig_optimisation.png
