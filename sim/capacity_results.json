@@ -1,0 +1,203 @@
+{
+  "params": {
+    "annual_patients": 100000,
+    "camps": 20,
+    "camp_days_per_week": 5,
+    "camp_hours": 6.0,
+    "capture_min": 5.0,
+    "ungradable_raw": 0.225,
+    "recapture_success": 0.5,
+    "certus_recovery": 0.5,
+    "referable_prev": 0.08,
+    "sens": 0.92,
+    "spec": 0.88,
+    "abstain": 0.1,
+    "qa_negatives": 0.05,
+    "consent_min": 2.0,
+    "consent_fail": 0.05,
+    "inference_s": 3.0,
+    "upload_min": 0.5,
+    "outages_per_day": 1.5,
+    "outage_hours_per_day": 1.4,
+    "review_manual_s": 90.0,
+    "review_certus_s": 30.0,
+    "reviewer_hours_per_day": 4.0,
+    "reviewer_days_per_week": 5,
+    "tat_target_h": 48.0,
+    "days": 56,
+    "warmup_days": 7
+  },
+  "target_share_within_48h": 0.95,
+  "policies": {
+    "manual": {
+      "min_ophthalmologists": 3,
+      "at_min": {
+        "patients": 15187.0,
+        "reported": 13477.666666666666,
+        "within_target": 0.9635972041335088,
+        "tat_p50_h": 0.7461935092751245,
+        "tat_p95_h": 20.240616903301763,
+        "reviewer_utilisation": 0.8563958761736893,
+        "ungradable_referred": 0.112551944952401,
+        "human_reviews_share": 0.887448055047599
+      },
+      "searched": {
+        "60": {
+          "patients": 15225.666666666666,
+          "reported": 13528.666666666666,
+          "within_target": 0.9649722394917367,
+          "tat_p50_h": 0.21147479497460356,
+          "tat_p95_h": 20.166986192383664,
+          "reviewer_utilisation": 0.04298035443183575,
+          "ungradable_referred": 0.11145887577232726,
+          "human_reviews_share": 0.8885411242276727
+        },
+        "30": {
+          "patients": 15244.0,
+          "reported": 13548.666666666666,
+          "within_target": 0.9659253122398944,
+          "tat_p50_h": 0.21127466121779434,
+          "tat_p95_h": 20.163562740124487,
+          "reviewer_utilisation": 0.08597741089454995,
+          "ungradable_referred": 0.11121032774855999,
+          "human_reviews_share": 0.88878967225144
+        },
+        "15": {
+          "patients": 15271.0,
+          "reported": 13541.333333333334,
+          "within_target": 0.9642085248480273,
+          "tat_p50_h": 0.22013610158078842,
+          "tat_p95_h": 20.170524167369187,
+          "reviewer_utilisation": 0.17177914686271004,
+          "ungradable_referred": 0.11326131962946588,
+          "human_reviews_share": 0.886738680370534
+        },
+        "8": {
+          "patients": 15221.333333333334,
+          "reported": 13549.0,
+          "within_target": 0.9622908278837611,
+          "tat_p50_h": 0.2362095452704024,
+          "tat_p95_h": 20.188170445078438,
+          "reviewer_utilisation": 0.3210448428652875,
+          "ungradable_referred": 0.10987098925429657,
+          "human_reviews_share": 0.8901290107457034
+        },
+        "4": {
+          "patients": 15204.666666666666,
+          "reported": 13508.333333333334,
+          "within_target": 0.9647306255105454,
+          "tat_p50_h": 0.413616051308054,
+          "tat_p95_h": 20.22033974127417,
+          "reviewer_utilisation": 0.6492212853274384,
+          "ungradable_referred": 0.11157384618990807,
+          "human_reviews_share": 0.888426153810092
+        },
+        "2": {
+          "patients": 13326.0,
+          "reported": 11610.0,
+          "within_target": 0.20017413882269305,
+          "tat_p50_h": 111.3037583983306,
+          "tat_p95_h": 176.84496423207915,
+          "reviewer_utilisation": 1.1231402243386028,
+          "ungradable_referred": 0.12877078266279093,
+          "human_reviews_share": 0.871229217337209
+        },
+        "3": {
+          "patients": 15187.0,
+          "reported": 13477.666666666666,
+          "within_target": 0.9635972041335088,
+          "tat_p50_h": 0.7461935092751245,
+          "tat_p95_h": 20.240616903301763,
+          "reviewer_utilisation": 0.8563958761736893,
+          "ungradable_referred": 0.112551944952401,
+          "human_reviews_share": 0.887448055047599
+        }
+      }
+    },
+    "certus": {
+      "min_ophthalmologists": 1,
+      "at_min": {
+        "patients": 15285.666666666666,
+        "reported": 14429.666666666666,
+        "within_target": 0.9888176540303095,
+        "tat_p50_h": 0.14828774192598454,
+        "tat_p95_h": 19.44555080220714,
+        "reviewer_utilisation": 0.2760299892988734,
+        "ungradable_referred": 0.05600311042002524,
+        "human_reviews_share": 0.2837679829600978
+      },
+      "searched": {
+        "60": {
+          "patients": 15343.0,
+          "reported": 14485.666666666666,
+          "within_target": 0.9890726402537187,
+          "tat_p50_h": 0.14644986091765935,
+          "tat_p95_h": 19.274241793888915,
+          "reviewer_utilisation": 0.004645427944767064,
+          "ungradable_referred": 0.05587640162952656,
+          "human_reviews_share": 0.2853713629009959
+        },
+        "30": {
+          "patients": 15301.0,
+          "reported": 14441.666666666666,
+          "within_target": 0.9899317293229629,
+          "tat_p50_h": 0.14677042620233402,
+          "tat_p95_h": 19.231678171473618,
+          "reviewer_utilisation": 0.009264262607924921,
+          "ungradable_referred": 0.056162839600424015,
+          "human_reviews_share": 0.2851931170763423
+        },
+        "15": {
+          "patients": 15315.333333333334,
+          "reported": 14435.333333333334,
+          "within_target": 0.9897742555744168,
+          "tat_p50_h": 0.1465451299530994,
+          "tat_p95_h": 19.287616209660992,
+          "reviewer_utilisation": 0.018250586920349796,
+          "ungradable_referred": 0.0574428430221958,
+          "human_reviews_share": 0.28066448987200987
+        },
+        "8": {
+          "patients": 15243.333333333334,
+          "reported": 14398.666666666666,
+          "within_target": 0.9896975725371778,
+          "tat_p50_h": 0.14705602094993284,
+          "tat_p95_h": 19.260221388037408,
+          "reviewer_utilisation": 0.03472480347539616,
+          "ungradable_referred": 0.05541309267154598,
+          "human_reviews_share": 0.28403906940956497
+        },
+        "4": {
+          "patients": 15372.333333333334,
+          "reported": 14505.666666666666,
+          "within_target": 0.9899815616552549,
+          "tat_p50_h": 0.14662932766424192,
+          "tat_p95_h": 19.279413359186233,
+          "reviewer_utilisation": 0.06882349190971064,
+          "ungradable_referred": 0.0563747297359567,
+          "human_reviews_share": 0.28024466625627276
+        },
+        "2": {
+          "patients": 15230.333333333334,
+          "reported": 14358.0,
+          "within_target": 0.988020680843036,
+          "tat_p50_h": 0.1469459334060149,
+          "tat_p95_h": 19.36104026933415,
+          "reviewer_utilisation": 0.13772949674868076,
+          "ungradable_referred": 0.05727191918423286,
+          "human_reviews_share": 0.28248609774152716
+        },
+        "1": {
+          "patients": 15285.666666666666,
+          "reported": 14429.666666666666,
+          "within_target": 0.9888176540303095,
+          "tat_p50_h": 0.14828774192598454,
+          "tat_p95_h": 19.44555080220714,
+          "reviewer_utilisation": 0.2760299892988734,
+          "ungradable_referred": 0.05600311042002524,
+          "human_reviews_share": 0.2837679829600978
+        }
+      }
+    }
+  }
+}
