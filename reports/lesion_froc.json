@@ -1,0 +1,80 @@
+{
+ "tolerance_canvas_px": 3,
+ "images": 30,
+ "classes": {
+  "MA": {
+   "lesions": 1189,
+   "fp_per_image_range": [
+    15.67,
+    61.3
+   ],
+   "sens_at_fppi": {},
+   "froc_score_over_covered_points": null,
+   "points_covered": "0 of 7",
+   "at_deployed_threshold": {
+    "threshold": 0.406,
+    "sensitivity": 0.746,
+    "fp_per_image": 39.8
+   },
+   "canvas_pixel_aupr": 0.3885,
+   "native_pixel_aupr": 0.3692
+  },
+  "HE": {
+   "lesions": 607,
+   "fp_per_image_range": [
+    5.93,
+    99.6
+   ],
+   "sens_at_fppi": {
+    "8": 0.4458
+   },
+   "froc_score_over_covered_points": 0.4458,
+   "points_covered": "1 of 7",
+   "at_deployed_threshold": {
+    "threshold": 0.648,
+    "sensitivity": 0.7759,
+    "fp_per_image": 27.47
+   },
+   "canvas_pixel_aupr": 0.5324,
+   "native_pixel_aupr": 0.5265
+  },
+  "EX": {
+   "lesions": 3637,
+   "fp_per_image_range": [
+    7.93,
+    55.7
+   ],
+   "sens_at_fppi": {
+    "8": 0.4093
+   },
+   "froc_score_over_covered_points": 0.4093,
+   "points_covered": "1 of 7",
+   "at_deployed_threshold": {
+    "threshold": 0.828,
+    "sensitivity": 0.7957,
+    "fp_per_image": 29.73
+   },
+   "canvas_pixel_aupr": 0.3317,
+   "native_pixel_aupr": 0.2725
+  },
+  "SE": {
+   "lesions": 52,
+   "fp_per_image_range": [
+    0.37,
+    0.7
+   ],
+   "sens_at_fppi": {
+    "0.5": 0.5577
+   },
+   "froc_score_over_covered_points": 0.5577,
+   "points_covered": "1 of 7",
+   "at_deployed_threshold": {
+    "threshold": 0.121,
+    "sensitivity": 0.5577,
+    "fp_per_image": 0.6
+   },
+   "canvas_pixel_aupr": 0.4633,
+   "native_pixel_aupr": 0.4836
+  }
+ }
+}

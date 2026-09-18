@@ -1,0 +1,231 @@
+localisation...
+{
+ "n": 115,
+ "disc_located": 115,
+ "fovea_located": 114,
+ "median_disc_diameter_native_px": 515.5,
+ "od_error_native_px": {
+  "mean": 108.4,
+  "median": 27.1
+ },
+ "od_within_1_disc_radius": 0.9565,
+ "fovea_error_native_px": {
+  "mean": 413.4,
+  "median": 349.8
+ },
+ "fovea_within_1_disc_diameter": 0.6957,
+ "fovea_within_1_disc_radius": 0.3565,
+ "note": "Rates are over all test eyes; an eye where the disc or fovea was not located counts as a miss."
+}
+vessels...
+{
+ "HRF": {
+  "n": 15,
+  "auc": 0.9738,
+  "at_0.5": {
+   "sensitivity": 0.8876,
+   "specificity": 0.9458,
+   "f1": 0.7357,
+   "accuracy": 0.9404
+  },
+  "predicted_vessel_fraction": 0.1321,
+  "annotated_vessel_fraction": 0.0935
+ },
+ "DRIVE": "not evaluated: Data/raw/DRIVE/test not found (download DRIVE and re-run)"
+}
+lesions...
+  lesions 0/381 7s
+  lesions 20/381 152s
+{
+ "idrid_native_aupr": {
+  "MA": 0.3692,
+  "HE": 0.5265,
+  "EX": 0.2725,
+  "SE": 0.4836
+ },
+ "froc": {
+  "IDRiD": {
+   "MA": {
+    "score": 0.6552,
+    "sens_at_fppi": {
+     "0.125": 0.6552,
+     "0.25": 0.6552,
+     "0.5": 0.6552,
+     "1": 0.6552,
+     "2": 0.6552,
+     "4": 0.6552,
+     "8": 0.6552
+    },
+    "lesions": 1189,
+    "images": 30
+   },
+   "HE": {
+    "score": 0.6343,
+    "sens_at_fppi": {
+     "0.125": 0.6343,
+     "0.25": 0.6343,
+     "0.5": 0.6343,
+     "1": 0.6343,
+     "2": 0.6343,
+     "4": 0.6343,
+     "8": 0.6343
+    },
+    "lesions": 607,
+    "images": 30
+   },
+   "EX": {
+    "score": 0.6918,
+    "sens_at_fppi": {
+     "0.125": 0.6918,
+     "0.25": 0.6918,
+     "0.5": 0.6918,
+     "1": 0.6918,
+     "2": 0.6918,
+     "4": 0.6918,
+     "8": 0.6918
+    },
+    "lesions": 3637,
+    "images": 30
+   },
+   "SE": {
+    "score": 0.5687,
+    "sens_at_fppi": {
+     "0.125": 0.5577,
+     "0.25": 0.5577,
+     "0.5": 0.5577,
+     "1": 0.5769,
+     "2": 0.5769,
+     "4": 0.5769,
+     "8": 0.5769
+    },
+    "lesions": 52,
+    "images": 30
+   }
+  },
+  "DDR": {
+   "MA": {
+    "score": 0.573,
+    "sens_at_fppi": {
+     "0.125": 0.573,
+     "0.25": 0.573,
+     "0.5": 0.573,
+     "1": 0.573,
+     "2": 0.573,
+     "4": 0.573,
+     "8": 0.573
+    },
+    "lesions": 3974,
+    "images": 351
+   },
+   "HE": {
+    "score": 0.3365,
+    "sens_at_fppi": {
+     "0.125": 0.3094,
+     "0.25": 0.3094,
+     "0.5": 0.3094,
+     "1": 0.3094,
+     "2": 0.3094,
+     "4": 0.3525,
+     "8": 0.4559
+    },
+    "lesions": 7795,
+    "images": 351
+   },
+   "EX": {
+    "score": 0.6228,
+    "sens_at_fppi": {
+     "0.125": 0.6151,
+     "0.25": 0.6151,
+     "0.5": 0.6151,
+     "1": 0.6151,
+     "2": 0.6151,
+     "4": 0.6151,
+     "8": 0.6686
+    },
+    "lesions": 10063,
+    "images": 351
+   },
+   "SE": {
+    "score": 0.3127,
+    "sens_at_fppi": {
+     "0.125": 0.2936,
+     "0.25": 0.2936,
+     "0.5": 0.3203,
+     "1": 0.3203,
+     "2": 0.3203,
+     "4": 0.3203,
+     "8": 0.3203
+    },
+    "lesions": 487,
+    "images": 351
+   }
+  }
+ },
+ "at_deployed_threshold": {
+  "IDRiD": {
+   "MA": {
+    "threshold": 0.406,
+    "sensitivity": 0.741,
+    "fp_per_image": 39.8
+   },
+   "HE": {
+    "threshold": 0.648,
+    "sensitivity": 0.7694,
+    "fp_per_image": 27.6
+   },
+   "EX": {
+    "threshold": 0.828,
+    "sensitivity": 0.7833,
+    "fp_per_image": 30.3
+   },
+   "SE": {
+    "threshold": 0.121,
+    "sensitivity": 0.5577,
+    "fp_per_image": 0.6
+   }
+  },
+  "DDR": {
+   "MA": {
+    "threshold": 0.406,
+    "sensitivity": 0.6158,
+    "fp_per_image": 11.46
+   },
+   "HE": {
+    "threshold": 0.648,
+    "sensitivity": 0.3976,
+    "fp_per_image": 6.41
+   },
+   "EX": {
+    "threshold": 0.828,
+    "sensitivity": 0.7005,
+    "fp_per_image": 8.89
+   },
+   "SE": {
+    "threshold": 0.121,
+    "sensitivity": 0.3121,
+    "fp_per_image": 0.33
+   }
+  }
+ },
+ "subpixel_MA_idrid": {
+  "matched_MAs": 837,
+  "canvas_px_in_native_px": "about 2.3 on IDRiD (4288-px originals on a 1536-px canvas)",
+  "argmax": {
+   "median_native_px": 3.707,
+   "mean_native_px": 4.236
+  },
+  "centroid": {
+   "median_native_px": 2.784,
+   "mean_native_px": 3.146
+  },
+  "quadratic": {
+   "median_native_px": 3.242,
+   "mean_native_px": 3.812
+  },
+  "gaussian": {
+   "median_native_px": 3.258,
+   "mean_native_px": 3.812
+  }
+ }
+}
+-> D:\certus\reports\structures.json

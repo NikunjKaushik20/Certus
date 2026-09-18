@@ -1,0 +1,21 @@
+HRF train: best F1 0.7827 at threshold 0.85 (F1 at 0.5: 0.7345)
+{
+ "threshold": 0.85,
+ "chosen_on": "HRF train split (30 images), max pooled F1",
+ "hrf_train_f1": 0.7827,
+ "hrf_test": {
+  "auc": 0.9738,
+  "at_0.5": {
+   "sensitivity": 0.8876,
+   "specificity": 0.9458,
+   "f1": 0.7357,
+   "accuracy": 0.9404
+  },
+  "at_0.85": {
+   "sensitivity": 0.7668,
+   "specificity": 0.9781,
+   "f1": 0.775,
+   "accuracy": 0.9584
+  }
+ }
+}

@@ -1,0 +1,71 @@
+{
+ "train_n": 335,
+ "test_n": 115,
+ "fitted": {
+  "dd": {
+   "ruler": "dd",
+   "temporal": 2.4956,
+   "inferior": 0.3373
+  },
+  "D": {
+   "ruler": "D",
+   "temporal": 0.3785,
+   "inferior": 0.0511
+  }
+ },
+ "refine_radius_dd": 0.5,
+ "train": {
+  "engine rule (2.5 DD, 0.1 DD)": {
+   "median_native_px": 172.9,
+   "mean_native_px_located": 189.5,
+   "within_1_disc_radius": 0.8,
+   "within_1_disc_diameter": 0.9851
+  },
+  "fitted, ruler=dd": {
+   "median_native_px": 130.2,
+   "mean_native_px_located": 151.6,
+   "within_1_disc_radius": 0.8925,
+   "within_1_disc_diameter": 0.9851
+  },
+  "fitted, ruler=D": {
+   "median_native_px": 107.0,
+   "mean_native_px_located": 120.9,
+   "within_1_disc_radius": 0.9642,
+   "within_1_disc_diameter": 0.994
+  },
+  "fitted, ruler=D, + darkest point within 0.5 DD": {
+   "median_native_px": 31.5,
+   "mean_native_px_located": 69.5,
+   "within_1_disc_radius": 0.9433,
+   "within_1_disc_diameter": 0.991
+  }
+ },
+ "test": {
+  "engine rule (2.5 DD, 0.1 DD)": {
+   "median_native_px": 165.1,
+   "mean_native_px_located": 180.6,
+   "within_1_disc_radius": 0.8435,
+   "within_1_disc_diameter": 0.9913
+  },
+  "fitted, ruler=dd": {
+   "median_native_px": 125.8,
+   "mean_native_px_located": 149.5,
+   "within_1_disc_radius": 0.913,
+   "within_1_disc_diameter": 0.9913
+  },
+  "fitted, ruler=D": {
+   "median_native_px": 113.6,
+   "mean_native_px_located": 115.1,
+   "within_1_disc_radius": 0.9913,
+   "within_1_disc_diameter": 1.0
+  },
+  "fitted, ruler=D, + darkest point within 0.5 DD": {
+   "median_native_px": 35.5,
+   "mean_native_px_located": 67.3,
+   "within_1_disc_radius": 0.9478,
+   "within_1_disc_diameter": 0.9913
+  }
+ },
+ "idrid_challenge_best_fovea_native_px": 64.49,
+ "chosen_on_train": "fitted, ruler=D, + darkest point within 0.5 DD"
+}
