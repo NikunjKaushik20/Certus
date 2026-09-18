@@ -1,0 +1,253 @@
+{
+ "images": 6,
+ "passed": true,
+ "p_tolerance": 0.005,
+ "gradcam_r_min": 0.95,
+ "max_p_diff": 0.0020799999999999985,
+ "second_tolerance": 0.15,
+ "max_second_logit_diff": 0.011808000000000263,
+ "min_gradcam_r": 0.994,
+ "lesion_counts_identical": 5,
+ "rows": [
+  {
+   "file": "grade0_no_dr_IDRiD_029.jpg",
+   "grade": [
+    0,
+    0
+   ],
+   "decision": [
+    "non-referable",
+    "non-referable"
+   ],
+   "quality": [
+    "good",
+    "good"
+   ],
+   "p_referable": [
+    0.01297,
+    0.01505
+   ],
+   "second_logit": [
+    -10.4678,
+    -10.469312
+   ],
+   "lesions_MA_HE_EX_SE": [
+    [
+     3,
+     3,
+     1,
+     0
+    ],
+    [
+     3,
+     3,
+     1,
+     0
+    ]
+   ],
+   "gradcam_pearson_r": 0.9983,
+   "gradcam_mean_abs_diff": 0.0014,
+   "failures": []
+  },
+  {
+   "file": "grade0_no_dr_IDRiD_030.jpg",
+   "grade": [
+    0,
+    0
+   ],
+   "decision": [
+    "non-referable",
+    "non-referable"
+   ],
+   "quality": [
+    "good",
+    "good"
+   ],
+   "p_referable": [
+    0.00955,
+    0.01114
+   ],
+   "second_logit": [
+    -12.6438,
+    -12.640845
+   ],
+   "lesions_MA_HE_EX_SE": [
+    [
+     5,
+     1,
+     0,
+     0
+    ],
+    [
+     5,
+     1,
+     0,
+     0
+    ]
+   ],
+   "gradcam_pearson_r": 0.9985,
+   "gradcam_mean_abs_diff": 0.0009,
+   "failures": []
+  },
+  {
+   "file": "grade1_mild_IDRiD_063.jpg",
+   "grade": [
+    0,
+    0
+   ],
+   "decision": [
+    "non-referable",
+    "non-referable"
+   ],
+   "quality": [
+    "good",
+    "good"
+   ],
+   "p_referable": [
+    0.01042,
+    0.01085
+   ],
+   "second_logit": [
+    -10.6851,
+    -10.675917
+   ],
+   "lesions_MA_HE_EX_SE": [
+    [
+     2,
+     1,
+     0,
+     0
+    ],
+    [
+     2,
+     1,
+     0,
+     0
+    ]
+   ],
+   "gradcam_pearson_r": 0.994,
+   "gradcam_mean_abs_diff": 0.0015,
+   "failures": []
+  },
+  {
+   "file": "grade2_moderate_IDRiD_008.jpg",
+   "grade": [
+    3,
+    3
+   ],
+   "decision": [
+    "referable",
+    "referable"
+   ],
+   "quality": [
+    "good",
+    "good"
+   ],
+   "p_referable": [
+    0.99446,
+    0.99554
+   ],
+   "second_logit": [
+    15.5337,
+    15.545508
+   ],
+   "lesions_MA_HE_EX_SE": [
+    [
+     76,
+     30,
+     18,
+     0
+    ],
+    [
+     76,
+     30,
+     18,
+     0
+    ]
+   ],
+   "gradcam_pearson_r": 0.9987,
+   "gradcam_mean_abs_diff": 0.0005,
+   "failures": []
+  },
+  {
+   "file": "grade3_severe_IDRiD_006.jpg",
+   "grade": [
+    3,
+    3
+   ],
+   "decision": [
+    "referable",
+    "referable"
+   ],
+   "quality": [
+    "good",
+    "good"
+   ],
+   "p_referable": [
+    0.9984,
+    0.99835
+   ],
+   "second_logit": [
+    15.6013,
+    15.608024
+   ],
+   "lesions_MA_HE_EX_SE": [
+    [
+     80,
+     36,
+     14,
+     0
+    ],
+    [
+     80,
+     36,
+     14,
+     0
+    ]
+   ],
+   "gradcam_pearson_r": 0.999,
+   "gradcam_mean_abs_diff": 0.0007,
+   "failures": []
+  },
+  {
+   "file": "grade4_proliferative_IDRiD_001.jpg",
+   "grade": [
+    4,
+    4
+   ],
+   "decision": [
+    "referable",
+    "referable"
+   ],
+   "quality": [
+    "good",
+    "good"
+   ],
+   "p_referable": [
+    0.99713,
+    0.99724
+   ],
+   "second_logit": [
+    13.6863,
+    13.691146
+   ],
+   "lesions_MA_HE_EX_SE": [
+    [
+     76,
+     112,
+     5,
+     2
+    ],
+    [
+     76,
+     114,
+     5,
+     2
+    ]
+   ],
+   "gradcam_pearson_r": 0.9993,
+   "gradcam_mean_abs_diff": 0.0007,
+   "failures": []
+  }
+ ]
+}

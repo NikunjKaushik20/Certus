@@ -1,0 +1,25 @@
+
+	Trial License -- for use to evaluate programs for possible purchase as an end-user only.
+
+importing ONNX (about a minute, cached afterwards)...
+Certus v0.4 | step 16760 | GPU NVIDIA GeForce RTX 3050 6GB Laptop GPU
+temperature 1.2113 | clear below 0.0472 | refer above 0.2253
+
+grade0_no_dr_IDRiD_029.jpg         grade 0  p 0.0130  trust  73  non-referable   quality good (1.00)  13702 ms
+                                    MA 3  HE 3  EX 1  SE 0   mac(0 0 0 0)   fovea at (927,773) DD=233 px
+                                    vessels: 2.7%  subpixel MAs: 3  HE: [dot 3, flame 0, pre 0]  NV: [experimental] Normal vascular caliber without neovascular fronds (risk 0.02)
+grade0_no_dr_IDRiD_030.jpg         grade 0  p 0.0095  trust  80  non-referable   quality good (1.00)  5132 ms
+                                    MA 5  HE 1  EX 0  SE 0   mac(0 0 0 0)   fovea at (983,773) DD=245 px
+                                    vessels: 1.3%  subpixel MAs: 5  HE: [dot 1, flame 0, pre 0]  NV: [experimental] Normal vascular caliber without neovascular fronds (risk 0.01)
+grade1_mild_IDRiD_063.jpg          grade 0  p 0.0104  trust  78  non-referable   quality good (1.00)  3519 ms
+                                    MA 2  HE 1  EX 0  SE 0   mac(0 0 0 0)   fovea at (660,792) DD=190 px
+                                    vessels: 4.6%  subpixel MAs: 2  HE: [dot 1, flame 0, pre 0]  NV: [experimental] Normal vascular caliber without neovascular fronds (risk 0.01)
+grade2_moderate_IDRiD_008.jpg      grade 3  p 0.9945  trust  99  referable       quality good (0.99)  2952 ms
+                                    MA 76  HE 30  EX 18  SE 0   mac(13 2 9 0)   fovea at (845,724) DD=226 px
+                                    vessels: 1.4%  subpixel MAs: 76  HE: [dot 29, flame 1, pre 0]  NV: [experimental] Normal vascular caliber without neovascular fronds (risk 0.24)
+grade3_severe_IDRiD_006.jpg        grade 3  p 0.9984  trust 100  referable       quality good (1.00)  3190 ms
+                                    MA 80  HE 36  EX 14  SE 0   mac(24 18 4 0)   fovea at (622,823) DD=236 px
+                                    vessels: 5.6%  subpixel MAs: 80  HE: [dot 32, flame 0, pre 4]  NV: [experimental] Fine irregular branching / preretinal-vitreous hemorrhage elsewhere (NVE) (risk 0.90)
+grade4_proliferative_IDRiD_001.jpg grade 4  p 0.9971  trust  99  referable       quality good (0.98)  3050 ms
+                                    MA 76  HE 112  EX 5  SE 2   mac(0 0 0 0)   fovea not located
+                                    vessels: 0.4%  subpixel MAs: 76  HE: [dot 88, flame 1, pre 23]  NV: [experimental] Fine irregular branching / preretinal-vitreous hemorrhage elsewhere (NVE) (risk 0.90)
