@@ -1,0 +1,56 @@
+{
+  "image": "IDRiD_A_IDRiD_79.jpg",
+  "source": "IDRiD (Indian Diabetic Retinopathy Image Dataset), expert-annotated",
+  "lesions": {
+    "MA": {
+      "count": 76,
+      "pixels": 3040,
+      "quadrants": {
+        "superior_temporal": 18,
+        "superior_nasal": 14,
+        "inferior_temporal": 17,
+        "inferior_nasal": 27
+      }
+    },
+    "HE": {
+      "count": 28,
+      "pixels": 12312,
+      "quadrants": {
+        "superior_temporal": 8,
+        "superior_nasal": 5,
+        "inferior_temporal": 8,
+        "inferior_nasal": 7
+      }
+    },
+    "EX": {
+      "count": 302,
+      "pixels": 40202,
+      "quadrants": {
+        "superior_temporal": 50,
+        "superior_nasal": 51,
+        "inferior_temporal": 73,
+        "inferior_nasal": 128
+      }
+    },
+    "SE": {
+      "count": 0,
+      "pixels": 0,
+      "quadrants": {
+        "superior_temporal": 0,
+        "superior_nasal": 0,
+        "inferior_temporal": 0,
+        "inferior_nasal": 0
+      }
+    },
+    "OD": {
+      "count": 1,
+      "pixels": 17686,
+      "quadrants": {
+        "superior_temporal": 0,
+        "superior_nasal": 0,
+        "inferior_temporal": 1,
+        "inferior_nasal": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "kind": "he",
+    "pos": [
+      -0.684,
+      0.1637,
+      -0.613
+    ],
+    "quadrant": "Superior nasal"
+  },
+  {
+    "kind": "od",
+    "pos": [
+      -0.4779,
+      -0.0833,
+      -0.8017
+    ],
+    "quadrant": null
+  },
+  {
+    "kind": "ma",
+    "pos": [
+      -0.2192,
+      -0.2894,
+      -0.8653
+    ],
+    "quadrant": "Inferior temporal"
+  },
+  {
+    "kind": "ex",
+    "pos": [
+      0.1447,
+      -0.1272,
+      -0.9196
+    ],
+    "quadrant": "Inferior temporal"
+  },
+  {
+    "kind": "he",
+    "pos": [
+      0.5233,
+      -0.2002,
+      -0.7497
+    ],
+    "quadrant": "Inferior temporal"
+  }
+]
