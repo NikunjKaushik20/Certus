@@ -1,0 +1,147 @@
+/* The console navbar: a floating pane of frosted glass over the warm paper ground.
+
+   The hover is one animation, not three: a label sits over a bolder copy of itself and the mask that
+   hides the bolder copy wipes across from the left. So the word appears to thicken from one side
+   rather than swapping fonts, and because both copies occupy the same box the row never reflows.
+   The `data-label` attribute carries the duplicate so there is nothing extra in the DOM. */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  padding: 0.6rem clamp(0.6rem, 3vw, 2rem) 0.2rem;
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1rem, 4vw, 3rem);
+  padding: 0.55rem 0.9rem 0.55rem 1.1rem;
+  border-radius: 3px;
+
+  /* the glass itself */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 252, 245, 0.72),
+    rgba(246, 239, 224, 0.52) 45%,
+    rgba(255, 252, 245, 0.66)
+  );
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  border: 1px solid rgba(255, 253, 247, 0.75);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 10px 30px -18px rgba(36, 26, 16, 0.5);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+/* Once the page scrolls under it, the pane needs a firmer edge to stay legible. */
+.navbar.lifted .nav-inner {
+  border-color: rgba(225, 209, 172, 0.9);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 14px 34px -16px rgba(36, 26, 16, 0.55);
+}
+
+.navbar .wordmark {
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 1.18rem;
+  flex: none;
+}
+
+/* ---------------------------------------------------------------- links */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.4rem, 1.6vw, 1.3rem);
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-links::-webkit-scrollbar { display: none; }
+
+.nav-links a {
+  position: relative;
+  display: block;
+  padding: 0.42rem 0.15rem 0.5rem;
+  text-decoration: none;
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+/* the bolder copy, revealed left to right by a clip */
+.nav-links a span { position: relative; display: inline-block; }
+.nav-links a span::after {
+  content: attr(data-label);
+  position: absolute;
+  inset: 0;
+  color: var(--sienna-deep);
+  font-weight: 600;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
+  pointer-events: none;
+}
+.nav-links a:hover span::after,
+.nav-links a:focus-visible span::after,
+.nav-links a.on span::after { clip-path: inset(0 0 0 0); }
+
+/* the rule under the word, drawn from the same side */
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0.15rem;
+  right: 0.15rem;
+  bottom: 0.18rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--sienna), var(--oak));
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.nav-links a:hover::after,
+.nav-links a:focus-visible::after,
+.nav-links a.on::after { transform: scaleX(1); }
+
+.nav-links a.on { color: var(--sienna-deep); }
+
+/* ---------------------------------------------------------------- identity */
+.navbar .who {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex: none;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.navbar .who button {
+  background: rgba(255, 252, 245, 0.5);
+  color: var(--ink-dim);
+  border: 1px solid rgba(185, 155, 104, 0.55);
+  padding: 0.34rem 0.75rem;
+  font-size: 0.74rem;
+  letter-spacing: 0;
+  text-transform: none;
+  font-family: var(--body);
+}
+.navbar .who button:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+@media (max-width: 780px) {
+  .navbar .who span { display: none; }
+  .nav-inner { padding-left: 0.8rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-links a span::after,
+  .nav-links a::after { transition: none; }
+}
