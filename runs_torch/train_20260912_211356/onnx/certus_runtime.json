@@ -1,0 +1,153 @@
+{
+  "checkpoint": "runs_torch/train_20260912_211356/best.pt",
+  "step": 16760,
+  "cfg": {
+    "manifests": "D:/Certus/Data/manifests",
+    "runs": "D:/Certus/runs_torch",
+    "canvas": 1536,
+    "tile": 512,
+    "grid": 3,
+    "global_size": 512,
+    "seg_classes": [
+      "MA",
+      "HE",
+      "EX",
+      "SE",
+      "OD",
+      "VES"
+    ],
+    "n_lesion": 4,
+    "num_grades": 5,
+    "backbone": "efficientnet_b0",
+    "decoder_channels": [
+      256,
+      128,
+      64,
+      32
+    ],
+    "freeze_bn": true,
+    "attn_dim": 128,
+    "head_hidden": 256,
+    "dropout": 0.3,
+    "evidence_dim": 12,
+    "grad_checkpointing": false,
+    "batch_grade": 1,
+    "accum_grade": 8,
+    "batch_seg": 8,
+    "batch_quality": 16,
+    "target_eyes_per_step": 8,
+    "grade_power": 0.5,
+    "dataset_power": 0.5,
+    "lesion_centred": 0.7,
+    "lesion_priority": [
+      3,
+      2,
+      1,
+      1
+    ],
+    "partial_quality": 0.25,
+    "use_aux_eyepacs": true,
+    "lr": 9.115888299750825e-05,
+    "enc_lr_ratio": 0.1,
+    "weight_decay": 0.0001,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "warmup_frac": 0.03,
+    "min_lr_frac": 0.01,
+    "grad_clip": 5.0,
+    "ema_decay": 0.999,
+    "epochs": 7,
+    "referable_weight": 2.0,
+    "tversky_alpha": 0.3,
+    "tversky_beta": 0.7,
+    "focal_gamma": 2.0,
+    "lrf_steps": 200,
+    "lrf_min": 1e-06,
+    "lrf_max": 1.0,
+    "lrf_ratios": [
+      0.1,
+      0.3,
+      1.0
+    ],
+    "lrf_smooth": 0.95,
+    "lrf_diverge": 4.0,
+    "aug_rotate": 15.0,
+    "aug_scale": 0.15,
+    "aug_shift": 0.05,
+    "aug_brightness": 0.2,
+    "aug_contrast": 0.2,
+    "aug_gamma": 0.3,
+    "aug_color": 0.05,
+    "aug_blur_p": 0.25,
+    "aug_blur_sigma": [
+      0.5,
+      2.5
+    ],
+    "aug_vignette_p": 0.3,
+    "aug_vignette_max": 0.5,
+    "aug_noise_p": 0.2,
+    "aug_noise_sigma": 0.03,
+    "workers_grade": 2,
+    "workers_seg": 2,
+    "workers_quality": 1,
+    "val_every": 1000,
+    "val_subset": 800,
+    "seed": 42,
+    "amp_dtype": "bfloat16"
+  },
+  "val": {
+    "grade": {
+      "n": 3049,
+      "auc_referable": 0.9827701961894328,
+      "qwk": 0.8921936793831944,
+      "accuracy": 0.8205969170219745,
+      "ece_referable": 0.025940436770988774,
+      "sens_at_85spec": 0.9828101644245142,
+      "spec_at_85": 0.8503798947983635,
+      "thr_at_85": 0.048136770725250244,
+      "sens_at_0.5": 0.9118086696562033,
+      "spec_at_0.5": 0.9526592635885447,
+      "per_dataset": {
+        "APTOS2019": {
+          "n": 526,
+          "auc": 0.9797725186326224,
+          "qwk": 0.9145108637606861
+        },
+        "DDR": {
+          "n": 2466,
+          "auc": 0.9835140450184698,
+          "qwk": 0.887591165707133
+        },
+        "IDRiD": {
+          "n": 57,
+          "auc": 0.9857142857142857,
+          "qwk": 0.8782987445554702
+        }
+      }
+    },
+    "seg_dice": {
+      "MA": 0.4289,
+      "HE": 0.6047,
+      "EX": 0.6034,
+      "SE": 0.51,
+      "MA_best": 0.429,
+      "MA_thr": 0.562,
+      "MA_ap": 0.2612,
+      "HE_best": 0.608,
+      "HE_thr": 0.684,
+      "HE_ap": 0.5072,
+      "EX_best": 0.6141,
+      "EX_thr": 0.832,
+      "EX_ap": 0.5252,
+      "SE_best": 0.515,
+      "SE_thr": 0.004,
+      "SE_ap": 0.36
+    },
+    "quality": {
+      "accuracy": 0.9176232275489534,
+      "auc_reject": 0.993395222075544
+    }
+  }
+}

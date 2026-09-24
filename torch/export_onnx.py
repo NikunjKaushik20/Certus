@@ -9,7 +9,9 @@ Four graphs, matching the MATLAB model struct (matlab/model/importCertusOnnx.m):
                      emb is its spatial mean, so Grad-CAM needs only this map and d(logit)/d(emb).
 Tiling, attention softmax and the evidence vector stay in MATLAB code (gradeForward.m),
 exactly as in training. Every graph is checked against PyTorch with onnxruntime.
-Usage: python export_onnx.py runs_torch/train_<stamp>/best.pt [out_dir] [--only feat|second]
+The API's CPU path (api/certus_api/net_onnx.py) runs certus_enc, certus_feat and certus_second
+with onnxruntime, plus certus_runtime.json and certus_heads.npz (see export_runtime).
+Usage: python export_onnx.py runs_torch/train_<stamp>/best.pt [out_dir] [--only feat|second|runtime]
 """
 import json
 import os
@@ -87,6 +89,26 @@ def export_second(ck, out):
     print("->", out)
 
 
+def export_runtime(ck, out):
+    """What the API's onnxruntime path needs that no graph carries, so it never imports torch:
+
+      certus_runtime.json  the training config, step and validation metrics from the checkpoint
+      certus_heads.npz     attention, grade and quality head weights. The API runs these tiny
+                           heads in numpy rather than as graphs because Grad-CAM needs their
+                           gradient, and differentiating a 2-layer MLP by hand is cheaper than
+                           shipping autograd."""
+    root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    c = torch.load(ck, map_location="cpu", weights_only=False)
+    heads = {k: v.float().numpy() for k, v in c["ema"].items()
+             if k.startswith(("attn.", "grade_head.", "qual_head."))}
+    np.savez(f"{out}/certus_heads.npz", **heads)
+    rel = os.path.relpath(os.path.abspath(ck), root).replace(os.sep, "/")
+    with open(f"{out}/certus_runtime.json", "w") as fh:
+        json.dump({"checkpoint": rel, "step": int(c.get("step", 0)), "cfg": json.loads(c["cfg"]),
+                   "val": c.get("val") or {}}, fh, indent=2, default=float)
+    print(f"certus_runtime.json, certus_heads.npz ({len(heads)} tensors) ->", out)
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     only = sys.argv[sys.argv.index("--only") + 1] if "--only" in sys.argv else None
@@ -96,6 +118,9 @@ def main():
     os.makedirs(out, exist_ok=True)
     if only == "second":
         export_second(ck, out)
+        return
+    if only == "runtime":
+        export_runtime(ck, out)
         return
     model, cfg, step = load_model(ck)
     model = model.float().cpu().eval()
@@ -142,6 +167,7 @@ def main():
                                       for k in ("clear_below", "refer_above")}
     with open(f"{out}/certus_meta.json", "w") as fh:
         json.dump(meta, fh, indent=2)
+    export_runtime(ck, out)
     print("->", out)
 
 
