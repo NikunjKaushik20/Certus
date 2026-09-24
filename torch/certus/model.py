@@ -126,18 +126,33 @@ class CertusNet(nn.Module):
     def forward_quality(self, x):
         return self.qual_head(self.embed(self.encode(x)))
 
-    def forward_eye(self, xc, with_maps=False):
-        """xc: (n,3,D,D) canvases in [0,1] -> ordinal grade logits (n,4), quality logits, extras."""
+    def forward_eye(self, xc, with_maps=False, chunk=None):
+        """xc: (n,3,D,D) canvases in [0,1] -> ordinal grade logits (n,4), quality logits, extras.
+
+        chunk: encode and decode at most this many tiles at a time. Inference only: the tiles
+        never interact before the attention pooling, so the output is identical, and peak memory
+        falls from ten tiles' activations to `chunk` tiles' (1.65 -> 1.14 GB on CPU at chunk=1).
+        None keeps the single batch that training backpropagates through."""
         cfg = self.cfg
         g, t = cfg.grid, cfg.tile
         n = xc.shape[0]
         nt = n * g * g
         tiles = make_tiles(xc, g, t)
         glob = F.interpolate(xc, size=(cfg.global_size,) * 2, mode="bilinear", antialias=True, align_corners=False)
-        feats = self.encode(torch.cat([tiles, glob]))
-        emb = self.embed(feats)
-        emb_t, emb_g = emb[:nt], emb[nt:]
-        seg = self.decode({s: f[:nt] for s, f in feats.items()})        # decoder on tiles only
+        if chunk is None or chunk >= nt + n:
+            feats = self.encode(torch.cat([tiles, glob]))
+            emb = self.embed(feats)
+            emb_t, emb_g = emb[:nt], emb[nt:]
+            seg = self.decode({s: f[:nt] for s, f in feats.items()})    # decoder on tiles only
+        else:
+            emb_t, seg = [], []
+            for i in range(0, nt, chunk):
+                feats = self.encode(tiles[i:i + chunk])
+                emb_t.append(self.embed(feats))
+                seg.append(self.decode(feats))
+                del feats
+            emb_t, seg = torch.cat(emb_t), torch.cat(seg)
+            emb_g = self.embed(self.encode(glob))
 
         a = torch.softmax(self.attn(emb_t).view(n, g * g).float(), dim=1)
         pooled = (emb_t.view(n, g * g, -1).float() * a.unsqueeze(-1)).sum(1)
