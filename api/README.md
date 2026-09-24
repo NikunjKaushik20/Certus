@@ -22,6 +22,10 @@ python smoke_test.py                     # full flow end to end, exits non-zero 
 | Variable | Default | Meaning |
 |---|---|---|
 | `CERTUS_DEVICE` | `auto` | `auto` uses CUDA when present, else CPU. `cpu` forces CPU. |
+| `CERTUS_RUNTIME` | `auto` | `torch` or `onnx`. `auto` uses torch on a GPU and onnxruntime otherwise. |
+| `CERTUS_BATCH_TILES` | `1` | Tiles per encoder pass on CPU. Only changes peak memory, never the result. |
+| `CERTUS_THREADS` | `0` | onnxruntime threads; `0` means one per physical core. |
+| `CERTUS_ONNX_DIR` | `onnx/` beside the checkpoint | Where the exported graphs live. |
 | `CERTUS_CHECKPOINT` | newest `best.pt` | Which trained model to serve. |
 | `CERTUS_TRUST_JSON` | `trust.json` beside the checkpoint | Calibration. Absent = uncalibrated, and the API says so. |
 | `CERTUS_DB_URL` | `sqlite:///api/certus.db` | Any SQLAlchemy URL; Postgres needs no code change. |
@@ -73,12 +77,22 @@ re-calibrating later never silently rewrites an existing record.
 
 ## Performance
 
-One eye is 3x3 tiles of 512 px plus a global view. Measured here: ~3.5-4 s per eye on 8 CPU cores,
-~0.3 s on the RTX 3050. Both eyes of a patient therefore take under 10 s on CPU, which is well
-inside a camp workflow; CUDA is used automatically when free.
+One eye is 3x3 tiles of 512 px plus a global view. Measured on one laptop (Ryzen, 2 threads), per eye:
+
+| Runtime | Grade | Grad-CAM | Idle memory | Peak memory |
+|---|---|---|---|---|
+| torch, CUDA (RTX 3050) | ~0.3 s | | | |
+| torch, CPU | ~4.8 s | ~6.7 s | ~680 MB | ~1.1 GB |
+| onnxruntime, CPU | ~2.8 s | ~1.0 s | ~150 MB | ~430 MB |
+
+The onnxruntime path runs the graphs `torch/export_onnx.py` wrote, with no torch in the process,
+which is what lets the API run on a 1 GB server. `pip install -r requirements-server.txt` installs
+only what it needs. `python check_onnx_parity.py` runs both runtimes on the demo photos and fails
+unless grade, decision, quality, lesion counts and Grad-CAM agree. After retraining, re-export
+with `python torch/export_onnx.py <best.pt>`: the API refuses to start on graphs exported from a
+different checkpoint.
 
 ## Not built yet
 
 Deliberate gaps, not oversights: no pagination on list endpoints, no rate limiting, API-key auth
-rather than OIDC/ABDM, no Alembic migrations (tables are created on startup), and the ONNX path is
-exported but the API serves the PyTorch checkpoint.
+rather than OIDC/ABDM, and no Alembic migrations (tables are created on startup).

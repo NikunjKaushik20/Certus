@@ -1,0 +1,12 @@
+# CPU server: the API on onnxruntime, with no torch in the environment (~150 MB resident idle,
+# ~430 MB grading an eye). requirements.txt adds torch for GPU serving, training and
+# check_onnx_parity.py.
+fastapi
+uvicorn[standard]
+sqlalchemy>=2.0
+pydantic>=2
+pydantic-settings
+python-multipart
+opencv-python-headless
+numpy
+onnxruntime>=1.17

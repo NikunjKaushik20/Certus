@@ -23,7 +23,13 @@ class Settings(BaseSettings):
     trust_json: str = ""                         # blank -> trust.json beside the checkpoint
 
     device: str = "auto"                         # auto | cuda | cpu
-    batch_tiles: int = 10                        # one eye = 3x3 tiles + global view
+    runtime: str = "auto"                        # auto | torch | onnx; auto = torch on a GPU, else onnx
+    onnx_dir: str = ""                           # blank -> onnx/ beside the checkpoint
+    threads: int = 0                             # onnxruntime intra-op threads; 0 = physical cores
+    # Tiles per encoder pass on CPU. An eye is 3x3 tiles + a global view; they do not interact
+    # before attention pooling, so this trades nothing but peak memory. Measured per eye:
+    # onnxruntime 1 -> 430 MB peak, 3 -> 675 MB, same speed; torch 10 -> 1.65 GB, 1 -> 1.14 GB.
+    batch_tiles: int = 1
 
     # demo auth: key:role pairs. Roles are technician | ophthalmologist | admin.
     api_keys: str = "demo-tech:technician,demo-doc:ophthalmologist,demo-admin:admin"
@@ -37,6 +43,9 @@ class Settings(BaseSettings):
         if not found:
             raise RuntimeError(f"no best.pt under {self.runs_dir}; train first or set CERTUS_CHECKPOINT")
         return found[-1]
+
+    def resolve_onnx_dir(self) -> str:
+        return self.onnx_dir or os.path.join(os.path.dirname(self.resolve_checkpoint()), "onnx")
 
     def resolve_trust(self) -> str:
         if self.trust_json:
