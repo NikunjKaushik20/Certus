@@ -18,7 +18,7 @@ from sqlalchemy.orm import Session
 from . import audit, storage
 from .config import settings
 from .db import SessionLocal
-from .inference import get_engine, retina
+from .inference import GRADE_LOCK, get_engine, retina
 from .models import (Device, CalibrationVersion, Encounter, Image, InferenceJob, LesionFinding,
                      ModelVersion, Prediction, QualityAssessment, Referral, now)
 
@@ -123,6 +123,11 @@ def process_job(db: Session, job: InferenceJob) -> None:
                        second_logit=second["logit"] if second else None)
         if second:
             res.setdefault("structures", {})["second_reader"] = second
+        # Before the first write: once the prediction is flushed this session holds the database
+        # write lock, and on a small CPU server Grad-CAM would keep every other writer waiting.
+        if d["decision"] != "non-referable":
+            res["structures"] = {**(res.get("structures") or {}),
+                                 **_precompute_gradcam(eng, pre["canvas"], res, img.id)}
         pred = Prediction(image_id=img.id, model_version_id=mv.id, calibration_version_id=cv.id,
                           dr_grade=res["dr_grade"], ordinal_probs=res["ordinal_probs"],
                           p_referable=res["p_referable"], p_referable_raw=res["p_referable_raw"],
@@ -145,8 +150,6 @@ def process_job(db: Session, job: InferenceJob) -> None:
                 if ok:
                     _, uri = storage.put(png.tobytes(), ".png")
             db.add(LesionFinding(prediction_id=pred.id, overlay_uri=uri, **f))
-        if pred.decision != "non-referable":
-            _precompute_gradcam(eng, pred, pre["canvas"], res)
         audit.record(db, "system", "prediction.created", "prediction", pred.id,
                      {"image_id": img.id, "grade": pred.dr_grade, "decision": pred.decision,
                       "p_referable": round(pred.p_referable, 6), "model_version": mv.id,
@@ -159,13 +162,14 @@ def process_job(db: Session, job: InferenceJob) -> None:
     _settle_encounter(db, img.encounter_id)
 
 
-def _precompute_gradcam(eng, pred: Prediction, canvas, res: dict) -> None:
+def _precompute_gradcam(eng, canvas, res: dict, image_id: str) -> dict:
     """Render the referable Grad-CAM now, for every eye a person will review.
 
-    On CPU Grad-CAM takes 15-30 s. Computed on demand, that wait lands inside the 30-second
+    On CPU Grad-CAM takes 1-2 s on onnxruntime and 15-30 s on torch. Computed on demand, that wait lands inside the 30-second
     review. Here it runs in the background worker instead, only for eyes routed to an
     ophthalmologist, and the endpoint serves the stored JPEG. Auto-cleared eyes still get
     theirs on demand. A failure here must not lose the prediction, so it is logged and skipped.
+    Returns the keys to merge into the prediction's structures (empty on failure).
     """
     try:
         if (res.get("structures") or {}).get("enhancement", {}).get("regraded"):
@@ -173,10 +177,10 @@ def _precompute_gradcam(eng, pred: Prediction, canvas, res: dict) -> None:
         t0 = time.perf_counter()
         jpeg = eng.gradcam(canvas, target="referable")
         _, uri = storage.put(jpeg, ".jpg")
-        pred.structures = {**(pred.structures or {}), "gradcam_uri": uri,
-                           "gradcam_ms": int((time.perf_counter() - t0) * 1000)}
+        return {"gradcam_uri": uri, "gradcam_ms": int((time.perf_counter() - t0) * 1000)}
     except Exception as e:                                # noqa: BLE001
-        log.warning("grad-cam precompute failed for prediction %s: %s", pred.id, e)
+        log.warning("grad-cam precompute failed for image %s: %s", image_id, e)
+        return {}
 
 
 def _finish(db: Session, job: InferenceJob, t0: float, executor: str) -> None:
@@ -257,7 +261,10 @@ def run_pending(db: Session, limit: int = 8) -> int:
 
 def _guarded(db: Session, job: InferenceJob) -> None:
     try:
-        process_job(db, job)
+        # One eye at a time, whichever thread asked: on a 1 GB server two concurrent eyes push the
+        # process into swap and each takes ten times as long.
+        with GRADE_LOCK:
+            process_job(db, job)
     except Exception:                                     # a bad photo must not kill the queue
         db.rollback()
         job = db.get(InferenceJob, job.id)

@@ -14,6 +14,7 @@ Engine.analyse knows or cares which one ran.
 import json
 import os
 import sys
+import threading
 import time
 
 import cv2
@@ -99,6 +100,11 @@ def _domain_table(t: dict) -> dict:
                       "miss_rate": row.get("miss_rate_at_threshold"),
                       "measured_on": split})
     return out
+
+
+# Grading and Grad-CAM run one at a time in this process. Re-entrant because the worker holds it
+# for a whole job and calls Engine.gradcam inside it.
+GRADE_LOCK = threading.RLock()
 
 
 def _config(d: dict) -> Config:
@@ -683,7 +689,8 @@ class Engine:
         import cv2 as _cv2
         rgb = _cv2.cvtColor(canvas_bgr, _cv2.COLOR_BGR2RGB)
         canvas_f = rgb.astype(np.float32) / 255.0
-        heat = self.net.grad_cam(canvas_f, target=target)
+        with GRADE_LOCK:
+            heat = self.net.grad_cam(canvas_f, target=target)
 
         # Map scalar heatmap → jet colour map.
         heat_u8 = (heat * 255).astype(np.uint8)

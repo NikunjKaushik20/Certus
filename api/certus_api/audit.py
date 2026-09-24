@@ -15,7 +15,7 @@ import hashlib
 import json
 from typing import Optional
 
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
 from .models import AuditLog
@@ -28,6 +28,21 @@ def _hash(prev: str, payload: dict) -> str:
     """Compute the chain hash: sha256 of the previous hash concatenated with the canonical payload."""
     body = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
     return hashlib.sha256((prev + body).encode()).hexdigest()
+
+
+def _lock_writers(db: Session) -> None:
+    """Hold the database write lock before reading the chain head, until the caller commits.
+
+    Without it, two sessions can read the same head and each append to it: the one that commits
+    second forks the chain, and verify_chain reports tampering that never happened. That is what
+    a request writing while the worker held a long transaction produced. On SQLite a write
+    statement takes the lock even when it matches no rows; on Postgres a transaction advisory lock
+    does the same job."""
+    dialect = db.get_bind().dialect.name
+    if dialect == "sqlite":
+        db.execute(text("UPDATE audit_log SET seq = seq WHERE 0"))
+    elif dialect == "postgresql":
+        db.execute(text("SELECT pg_advisory_xact_lock(7426811)"))
 
 
 def record(
@@ -44,6 +59,7 @@ def record(
     participate in the same transaction as the action being audited.
     """
     payload = payload or {}
+    _lock_writers(db)
     # Fetch the most recent entry to continue the chain
     prev = db.execute(select(AuditLog).order_by(AuditLog.seq.desc()).limit(1)).scalar_one_or_none()
     prev_hash = prev.payload_hash if prev else GENESIS
