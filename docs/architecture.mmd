@@ -1,0 +1,58 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'background': 'transparent',
+    'primaryColor': '#EAF2E6',
+    'primaryTextColor': '#1F301B',
+    'primaryBorderColor': '#4D6B45',
+    'lineColor': '#4D6B45',
+    'secondaryColor': '#F4F8F1',
+    'tertiaryColor': '#FAFDF8'
+  }
+}}%%
+flowchart TD
+    P["Fundus photo (consent recorded)<br/>FOV normalised, 1536 px canvas"] --> Q{"Quality gate"}
+    Q -- reject --> RT["Retake while the<br/>patient is still there"]
+    Q -- "usable: adaptive enhancement" --> TL
+    Q -- good --> TL
+
+    subgraph R1["Reader 1: Certus (explains itself)"]
+        TL["9 tiles of 512 px + 1 global view<br/>EfficientNet-B0 + U-Net decoder"]
+        TL --> SEG["Lesion, disc and vessel masks,<br/>then 12-number evidence (stop-gradient)"]
+        TL --> ATT["Gated attention<br/>over tiles"]
+        SEG --> GR["Ordinal grade head,<br/>temperature + screening band"]
+        ATT --> GR
+    end
+
+    subgraph R2["Reader 2: whole-image grader (accurate, no explanation)"]
+        WI["EfficientNet-B0, whole canvas at 512 px<br/>Its own band"]
+    end
+    P --> WI
+
+    REL["Reliability<br/>quality x camera"] --> D
+    GR --> D{"Both agree<br/>and both sure?"}
+    WI --> D
+    D -- "both clear" --> CL["Auto-clear:<br/>rescreen in 12 months"]
+    D -- "both refer" --> RF["Auto-refer"]
+    D -- "otherwise" --> HU["Ophthalmologist review<br/>with the reason"]
+
+    SEG --> X["Explanation: lesions, macula,<br/>tile attention, exact Grad-CAM"]
+    X --> HU
+    X --> RF
+    RF --> AU["Hash-chained audit log"]
+    HU --> AU
+    CL --> AU
+
+    classDef default fill:#EAF2E6,stroke:#4D6B45,stroke-width:1.8px,color:#1B2E18;
+    classDef highlight fill:#FEF8EE,stroke:#C9882B,stroke-width:2px,color:#8C5708;
+    classDef clear fill:#E8F4E4,stroke:#3D7D31,stroke-width:2px,color:#205916;
+    classDef refer fill:#FCECE8,stroke:#C84832,stroke-width:2px,color:#A32410;
+    classDef review fill:#EAF3FA,stroke:#2B6EA8,stroke-width:2px,color:#154B78;
+    classDef audit fill:#2B3F27,stroke:#1A2817,stroke-width:1.5px,color:#FFFFFF;
+
+    class X highlight;
+    class CL clear;
+    class RF refer;
+    class HU review;
+    class AU audit;
+
