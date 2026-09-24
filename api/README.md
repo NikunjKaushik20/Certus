@@ -7,11 +7,11 @@ No Redis, no Celery, no object store and no GPU are required to run it.
 ## Run
 
 ```bash
-cd D:/Certus/api
-python -m uvicorn certus_api.main:app --host 127.0.0.1 --port 8099
+cd api
+python -m uvicorn certus_api.main:app --host 127.0.0.1 --port 8000
 ```
 
-Interactive docs at <http://127.0.0.1:8099/docs>. Then, in another shell:
+Interactive docs at <http://127.0.0.1:8000/docs>. Then, in another shell:
 
 ```bash
 python smoke_test.py                     # full flow end to end, exits non-zero on any failure
