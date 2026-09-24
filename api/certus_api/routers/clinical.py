@@ -163,7 +163,6 @@ def report(encounter_id: str, db: Session = Depends(get_db),
     decision = ("referable" if "referable" in decisions else
                 "refer-to-human" if "refer-to-human" in decisions else
                 "non-referable" if decisions else "pending")
-    from ..inference import get_engine
     eng = get_engine()
     return EncounterReport(
         encounter=enc, images=images,

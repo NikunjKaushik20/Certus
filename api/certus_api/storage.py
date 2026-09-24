@@ -12,7 +12,6 @@ Shard layout::
 """
 import hashlib
 import os
-from pathlib import Path
 
 from .config import settings
 
