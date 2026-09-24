@@ -49,7 +49,7 @@ def queue_stats(db: Session = Depends(get_db),
                           .where(Referral.state != "closed")
                           .where(Referral.sla_due_at < now())).scalar_one()
     closed = db.execute(select(Referral).where(Referral.state == "closed")).scalars().all()
-    turnaround = [(r.closed_at - r.created_at).total_seconds() / 3600 for r in closed if r.closed_at]
+    turnaround = [(_aware(r.closed_at) - _aware(r.created_at)).total_seconds() / 3600 for r in closed if r.closed_at]
     within = [t for t in turnaround if t <= 48]
     return {
         "by_state": [{"state": s, "priority": p, "n": n} for s, p, n in rows],
