@@ -12,15 +12,16 @@ import cv2
 import numpy as np
 
 # Add repo to sys.path
-sys.path.insert(0, "d:/Certus")
-sys.path.insert(0, "d:/Certus/api")
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, REPO)
+sys.path.insert(0, os.path.join(REPO, "api"))
 
 from certus_api.inference import Engine
 from scripts.retina import evaluate_adequacy, adaptive_enhance
 
 def test_inference_and_structures():
     print("--- 1. Testing Engine Analysis & Structures ---")
-    img_path = "d:/Certus/demo_images/grade3_severe_IDRiD_006.jpg"
+    img_path = os.path.join(REPO, "demo_images", "grade3_severe_IDRiD_006.jpg")
     with open(img_path, "rb") as fh:
         raw_bytes = fh.read()
 
@@ -102,7 +103,7 @@ def test_api_report_export():
         enc = client.post("/v1/encounters", headers={"X-API-Key": "demo-tech"}, json={"patient_id": pat["id"], "site_id": site["id"]}).json()
 
         # Ingest image
-        img_path = "d:/Certus/demo_images/grade3_severe_IDRiD_006.jpg"
+        img_path = os.path.join(REPO, "demo_images", "grade3_severe_IDRiD_006.jpg")
         with open(img_path, "rb") as fh:
             uploaded = client.post(f"/v1/encounters/{enc['id']}/images", headers={"X-API-Key": "demo-tech"},
                                    files={"file": ("fundus.jpg", fh, "image/jpeg")},
