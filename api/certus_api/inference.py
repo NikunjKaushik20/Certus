@@ -4,8 +4,12 @@ The network is the training checkpoint (EMA weights) run through the same code p
 validation, so what the API reports and what the metrics claim cannot drift apart. The heavy
 work is one forward pass per eye: 3x3 tiles of 512 px plus a downscaled global view.
 
-Device is chosen at load time: CUDA when present, CPU otherwise. Nothing else in the backend
-knows or cares which one ran.
+The network runs on one of two runtimes, chosen at load time (CERTUS_RUNTIME):
+  torch  the checkpoint on CUDA or CPU (net_torch.py) -- what training and evaluation use
+  onnx   the exported graphs on onnxruntime (net_onnx.py) -- no torch in the process at all, so the
+         API fits a 1 GB CPU server
+auto picks torch when a GPU is visible and onnx otherwise. Both return numpy; nothing past
+Engine.analyse knows or cares which one ran.
 """
 import json
 import os
@@ -14,7 +18,6 @@ import time
 
 import cv2
 import numpy as np
-import torch
 
 from .config import settings
 
@@ -22,10 +25,8 @@ for _p in (settings.torch_root, settings.scripts_root):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from certus.config import Config           # noqa: E402  (path set above)
-from certus.model import CertusNet, WholeImageGrader   # noqa: E402
+from certus.config import Config           # noqa: E402  (path set above; plain dataclass, no torch)
 import retina                              # noqa: E402
-from . import gradcam as _gradcam          # noqa: E402  (gradcam.py lives in the api package)
 
 LESIONS = ("MA", "HE", "EX", "SE")
 QUALITY = ("good", "usable", "reject")
@@ -100,40 +101,86 @@ def _domain_table(t: dict) -> dict:
     return out
 
 
+def _config(d: dict) -> Config:
+    return Config(**{k: (tuple(v) if isinstance(v, list) else v) for k, v in d.items()})
+
+
+def _sigmoid_(x: np.ndarray) -> np.ndarray:
+    """In place: a stitched seg map is 57 MB, and a 1 GB server should not hold three of them."""
+    np.negative(x, out=x)
+    np.exp(x, out=x)
+    x += 1.0
+    np.reciprocal(x, out=x)
+    return x
+
+
+def _pick_runtime() -> str:
+    want = settings.runtime
+    if want in ("torch", "onnx"):
+        return want
+    if want != "auto":
+        raise RuntimeError(f"CERTUS_RUNTIME={want!r}; expected auto, torch or onnx")
+    if settings.device != "cpu":
+        try:
+            import torch
+            if torch.cuda.is_available():
+                return "torch"
+        except ImportError:
+            pass
+    try:
+        import onnxruntime  # noqa: F401
+    except ImportError:
+        return "torch"
+    return "onnx" if os.path.exists(os.path.join(settings.resolve_onnx_dir(), "certus_runtime.json")) else "torch"
+
+
+def _load_net():
+    runtime = _pick_runtime()
+    ck_path = settings.resolve_checkpoint()
+    if runtime == "torch":
+        from .net_torch import TorchNet
+        return TorchNet(ck_path, _config)
+    from .net_onnx import OnnxNet
+    onnx_dir = settings.resolve_onnx_dir()
+    rt_path = os.path.join(onnx_dir, "certus_runtime.json")
+    if not os.path.exists(rt_path):
+        raise RuntimeError(f"CERTUS_RUNTIME=onnx but {rt_path} is missing; run "
+                           "torch/export_onnx.py <best.pt> --only runtime")
+    # The export names the checkpoint it came from. Serving graphs of one checkpoint under the
+    # name of another would cite the wrong model_version on every prediction.
+    exported = json.load(open(rt_path))["checkpoint"]
+    here = os.path.relpath(os.path.abspath(ck_path), os.path.dirname(settings.runs_dir)).replace(os.sep, "/")
+    if exported != here:
+        raise RuntimeError(f"{onnx_dir} was exported from {exported}, not {here}; re-export it "
+                           "or set CERTUS_CHECKPOINT to match")
+    return OnnxNet(onnx_dir, ck_path, _config)
+
+
 class Engine:
-    """Loads once, serves many. Thread-safe for a single worker: inference is under no_grad and
-    the model is never mutated after load."""
+    """Loads once, serves many. Thread-safe for a single worker: inference never mutates the
+    network after load."""
 
     def __init__(self):
-        self.device = self._pick_device()
-        ck_path = settings.resolve_checkpoint()
-        ck = torch.load(ck_path, map_location=self.device, weights_only=False)
-        self.cfg = Config(**{k: (tuple(v) if isinstance(v, list) else v)
-                             for k, v in json.loads(ck["cfg"]).items()})
-        model = CertusNet(self.cfg, pretrained=False)
-        model.load_state_dict(ck["ema"])                      # EMA weights: what validation scored
-        self.model = model.to(self.device).eval()
-        if self.device == "cuda":
-            self.model = self.model.to(memory_format=torch.channels_last)
-        self.checkpoint = ck_path
-        self.step = int(ck.get("step", 0))
-        self.metrics = self._metrics(ck)
+        self.net = _load_net()
+        self.device = self.net.device
+        self.executor = self.net.executor
+        self.cfg = self.net.cfg
+        self.checkpoint = self.net.checkpoint
+        self.step = self.net.step
+        self.metrics = self._metrics(self.net.val)
         self.calibration = self._load_calibration()
-        self.second = self._load_second_reader()
+        self.second = self.net.attach_second(self.calibration.get("second_reader") or {})
+
+    @property
+    def model(self):
+        """The CertusNet, for research scripts that call it directly (torch runtime only)."""
+        if not hasattr(self.net, "model"):
+            raise RuntimeError("Engine.model needs the torch runtime; set CERTUS_RUNTIME=torch")
+        return self.net.model
 
     # ---------------------------------------------------------------- setup
     @staticmethod
-    def _pick_device() -> str:
-        want = settings.device
-        if want == "cpu":
-            return "cpu"
-        if want == "cuda" and not torch.cuda.is_available():
-            raise RuntimeError("CERTUS_DEVICE=cuda but no CUDA device is visible")
-        return "cuda" if torch.cuda.is_available() else "cpu"
-
-    @staticmethod
-    def _metrics(ck) -> dict:
-        v = ck.get("val") or {}
+    def _metrics(v: dict) -> dict:
         g = v.get("grade") or {}
         keep = ("n", "auc_referable", "sens_at_85spec", "spec_at_85", "thr_at_85", "qwk", "ece_referable")
         out = {k: g[k] for k in keep if k in g}
@@ -174,37 +221,6 @@ class Engine:
                 "domains": _domain_table(t),
                 "splits": {p: (t.get(p) or {}) for p in ("test", "external_messidor2")}}
 
-    def _load_second_reader(self):
-        """The plain whole-image grader named in trust.json, or None (Certus then decides alone)."""
-        sr = self.calibration.get("second_reader") or {}
-        if not sr.get("checkpoint"):
-            return None
-        path = sr["checkpoint"]
-        if not os.path.isabs(path):
-            path = os.path.join(os.path.dirname(settings.torch_root), path)
-        model = WholeImageGrader(pretrained=False)
-        model.load_state_dict(torch.load(path, map_location=self.device))
-        model = model.to(self.device).eval()
-        if self.device == "cuda":
-            model = model.to(memory_format=torch.channels_last)
-        return model
-
-    @torch.no_grad()
-    def _second_reader(self, x: torch.Tensor) -> dict | None:
-        """x: (1,3,D,D) RGB in [0,1], the unenhanced canvas -- what the second reader trained on."""
-        if self.second is None:
-            return None
-        size = int(self.calibration["second_reader"].get("input_size", 512))
-        xs = torch.nn.functional.interpolate(x.float(), size=(size, size), mode="bilinear",
-                                             antialias=True, align_corners=False)
-        if self.device == "cuda":
-            with torch.autocast("cuda", dtype=torch.bfloat16):
-                logits = self.second(xs.contiguous(memory_format=torch.channels_last)).float()
-        else:
-            logits = self.second(xs)
-        z = float(logits[0, 1].cpu())
-        return {"logit": round(z, 6), "p_referable": round(float(1 / (1 + np.exp(-z))), 6)}
-
     # ---------------------------------------------------------------- preprocessing
     def preprocess(self, raw: bytes) -> dict:
         """Decode -> FOV-normalised square canvas, exactly as the training data was built."""
@@ -225,25 +241,22 @@ class Engine:
                 "canvas_size": self.cfg.canvas}
 
     # ---------------------------------------------------------------- forward pass
-    @torch.no_grad()
     def analyse(self, canvas_bgr: np.ndarray) -> dict:
         t0 = time.perf_counter()
-        rgb = cv2.cvtColor(canvas_bgr, cv2.COLOR_BGR2RGB)
-        x = torch.from_numpy(rgb).permute(2, 0, 1).unsqueeze(0).float().div_(255).to(self.device)
-        if self.device == "cuda":
-            x = x.contiguous(memory_format=torch.channels_last)
-            with torch.autocast("cuda", dtype=getattr(torch, self.cfg.amp_dtype)):
-                out = self.model.forward_eye(x, with_maps=True)
-        else:
-            out = self.model.forward_eye(x, with_maps=True)
-        second = self._second_reader(x)
+        rgb01 = cv2.cvtColor(canvas_bgr, cv2.COLOR_BGR2RGB).astype(np.float32) / 255
+        out = self.net.eye(rgb01)
+        z = self.net.second(rgb01)                     # on the unenhanced canvas, as it was trained
+        second = None if z is None else {"logit": round(z, 6),
+                                         "p_referable": round(float(1 / (1 + np.exp(-z))), 6)}
+        del rgb01
 
         cal = self.calibration
-        logits = out["grade_logits"].float().cpu().numpy()[0]
+        logits = out["grade_logits"]
         raw_p = _cummin(1 / (1 + np.exp(-logits)))
         cal_p = _cummin(1 / (1 + np.exp(-logits / cal["temperature"])))
         grade = int((cal_p > 0.5).sum())
-        qual = torch.softmax(out["qual_logits"].float(), 1).cpu().numpy()[0]
+        ql = out["qual_logits"] - out["qual_logits"].max()
+        qual = np.exp(ql) / np.exp(ql).sum()
         qual_label = QUALITY[int(qual.argmax())]
 
         # Adequacy evaluation and adaptive enhancement
@@ -252,27 +265,17 @@ class Engine:
         if qual_label == "usable":
             canvas_enh, enhance_info = retina.adaptive_enhance(canvas_bgr, quality_label="usable")
             if enhance_info.get("applied"):
-                rgb_enh = cv2.cvtColor(canvas_enh, cv2.COLOR_BGR2RGB)
-                x_enh = torch.from_numpy(rgb_enh).permute(2, 0, 1).unsqueeze(0).float().div_(255).to(self.device)
-                if self.device == "cuda":
-                    x_enh = x_enh.contiguous(memory_format=torch.channels_last)
-                    with torch.autocast("cuda", dtype=getattr(torch, self.cfg.amp_dtype)):
-                        out_enh = self.model.forward_eye(x_enh, with_maps=True)
-                else:
-                    out_enh = self.model.forward_eye(x_enh, with_maps=True)
-
-                logits_enh = out_enh["grade_logits"].float().cpu().numpy()[0]
-                raw_p_enh = _cummin(1 / (1 + np.exp(-logits_enh)))
-                cal_p_enh = _cummin(1 / (1 + np.exp(-logits_enh / cal["temperature"])))
-                grade_enh = int((cal_p_enh > 0.5).sum())
-
-                out = out_enh
-                logits, raw_p, cal_p, grade = logits_enh, raw_p_enh, cal_p_enh, grade_enh
+                del out
+                out = self.net.eye(cv2.cvtColor(canvas_enh, cv2.COLOR_BGR2RGB).astype(np.float32) / 255)
+                logits = out["grade_logits"]
+                raw_p = _cummin(1 / (1 + np.exp(-logits)))
+                cal_p = _cummin(1 / (1 + np.exp(-logits / cal["temperature"])))
+                grade = int((cal_p > 0.5).sum())
                 enhance_info["regraded"] = True
                 canvas_bgr = canvas_enh
 
-        maps = out["lesion_prob"].float().cpu().numpy()[0]           # (4, D, D) after stop-gradient
-        seg = torch.sigmoid(out["seg_logits"].float()).cpu().numpy()[0]
+        maps = out["lesion_prob"]                                    # (4, D, D) after stop-gradient
+        seg = _sigmoid_(out["seg_logits"])
         structures = self._structures(seg, self.cfg.canvas, canvas_bgr,
                                       ves_thr=self.calibration["lesion_thresholds"].get("VES", 0.5))
         structures["adequacy"] = adequacy
@@ -294,13 +297,13 @@ class Engine:
                         "probs": {k: round(float(v), 6) for k, v in zip(QUALITY, qual)},
                         "adequacy": adequacy,
                         "recapture_advice": adequacy.get("recapture_advice", [])},
-            "evidence": [round(float(v), 6) for v in out["evidence"].float().cpu().numpy()[0]],
-            "attention": [round(float(v), 6) for v in out["attn"].float().cpu().numpy()[0]],
+            "evidence": [round(float(v), 6) for v in out["evidence"]],
+            "attention": [round(float(v), 6) for v in out["attn"]],
             "findings": findings,
             "structures": structures,
             "second_reader": second,
             "runtime_ms": runtime,
-            "executor": self.device,
+            "executor": self.executor,
         }
 
     @staticmethod
@@ -669,9 +672,8 @@ class Engine:
     def gradcam(self, canvas_bgr: np.ndarray, target: str = "referable") -> bytes:
         """Grad-CAM heatmap overlaid on the fundus canvas, returned as a JPEG byte string.
 
-        Calls gradcam.grad_cam() against the shared model instance. A forward hook is attached
-        to -- and removed from -- the backbone in a finally block, so the model is never left
-        with a dangling hook. The caller gets a JPEG because that is what the /gradcam endpoint
+        The heatmap comes from the runtime: gradcam.grad_cam() on torch, the same computation in
+        numpy on onnxruntime (net_onnx.OnnxNet.grad_cam). The caller gets a JPEG because that is what the /gradcam endpoint
         streams back, and re-encoding inside the endpoint would mean buffering the full np.ndarray
         over the thread boundary.
 
@@ -681,7 +683,7 @@ class Engine:
         import cv2 as _cv2
         rgb = _cv2.cvtColor(canvas_bgr, _cv2.COLOR_BGR2RGB)
         canvas_f = rgb.astype(np.float32) / 255.0
-        heat = _gradcam.grad_cam(self.model, canvas_f, self.cfg, target=target)
+        heat = self.net.grad_cam(canvas_f, target=target)
 
         # Map scalar heatmap → jet colour map.
         heat_u8 = (heat * 255).astype(np.uint8)
