@@ -46,7 +46,7 @@ def main():
     out = {"assisted": summarise(D.dropna(subset=["read_grade", "seconds"]), "read_grade")}
 
     if len(A):
-        P = pd.json_normalize(A.payload.map(json.loads))
+        P = pd.json_normalize(A.payload.map(lambda p: json.loads(p) if isinstance(p, str) else (p or {})))
         out["ratings"] = {
             "n": int(len(P)),
             "gradcam_useful": P.gradcam_useful.value_counts().sort_index().to_dict() if "gradcam_useful" in P else {},
@@ -59,7 +59,8 @@ def main():
         U = pd.read_csv(un).merge(C, on="case")
         out["unassisted"] = summarise(U, "grade")
 
-    json.dump(out, open(os.path.join(ROOT, "study", "results.json"), "w"), indent=1, default=str)
+    with open(os.path.join(ROOT, "study", "results.json"), "w") as f:
+        json.dump(out, f, indent=1, default=str)
     print(json.dumps(out, indent=1, default=str))
 
 
