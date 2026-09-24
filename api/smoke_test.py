@@ -3,14 +3,16 @@
 Run against a live server:  python smoke_test.py [base_url] [image_path]
 Exits non-zero on the first broken step, so it doubles as a CI gate.
 """
+import os
 import sys
 import time
 
 import requests
 
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:8099"
-IMG = sys.argv[2] if len(sys.argv) > 2 else "D:/Certus/Data/processed/IDRiD/img/IDRiD_A_IDRiD_01.jpg"
-IMG2 = sys.argv[3] if len(sys.argv) > 3 else "D:/Certus/Data/processed/IDRiD/img/IDRiD_A_IDRiD_02.jpg"
+IMG = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ROOT, "demo_images", "grade0_no_dr_IDRiD_029.jpg")
+IMG2 = sys.argv[3] if len(sys.argv) > 3 else os.path.join(ROOT, "demo_images", "grade0_no_dr_IDRiD_030.jpg")
 ADMIN = {"X-API-Key": "demo-admin"}
 TECH = {"X-API-Key": "demo-tech"}
 DOC = {"X-API-Key": "demo-doc"}
@@ -47,8 +49,6 @@ def main():
     print("consent   blocked before grant, allowed after")
 
     enc = call("POST", "/v1/encounters", TECH, json={"patient_id": pat["id"], "site_id": site["id"]})
-    with open(IMG, "rb") as fh:
-        blob = fh.read()
     uploaded = {}
     for eye, path in (("R", IMG), ("L", IMG2)):
         with open(path, "rb") as fh:
